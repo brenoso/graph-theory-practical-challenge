@@ -30,8 +30,7 @@ class Arquivo(object):
         nome_arquivo = 'instancia'
 
         # Navega pela pasta a procura do arquivo
-        # for root, dirs, files in os.walk("../instances"):
-        for root, dirs, files in os.walk("C:/Users/Breno/Desktop/graph-theory-practical-challenge/instances"):
+        for root, dirs, files in os.walk("../instances"):
             if path is None: # Evita encontrar dois arquivos com o mesmo nome
                 for file in files:
                     if nome_arquivo in file:
