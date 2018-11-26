@@ -74,3 +74,26 @@ class Arquivo(object):
     '''
     def get_horas_jornada_diaria(self):
         return int(self.__arquivo[3])
+
+    '''
+    Retorna a posicao (coordenadas) das sub-regioes
+    '''
+    def get_coordenadas_sub_regioes(self):
+
+        qtd_sub_regioes = self.get_qtd_sub_regioes()
+
+         # Calcula a linha do arquivo que corresponde a ultima sub regiao       
+        ultima_linha_regiao = 4 + qtd_sub_regioes
+
+        coordenadas = self.__arquivo[4:ultima_linha_regiao]
+
+        # Quebra cada linha transformando cada um de seus únicos elementos em uma lista de elementos 
+        coordenadas = [list(coordenadas.split()) for coordenadas in coordenadas] 
+        
+        # Remove os elementos com valor '0'
+        coordenadas = [[i for i in nested if i != '0'] for nested in coordenadas]
+
+        # Transforma as coordenadas em tipo numerico (float)
+        coordenadas = [[float(y) for y in x] for x in coordenadas]
+
+        return coordenadas
