@@ -1,7 +1,7 @@
 import os
 import sys
 
-class Arquivo(object):
+class Reader(object):
 
     '''
     Construtor da classe

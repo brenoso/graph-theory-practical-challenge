@@ -1,0 +1,73 @@
+%%%%%%%%%
+OBJETIVOS
+%%%%%%%%%
+
+MACRO: Percursos otimizados para o atendimento da demanda de seus clientes.
+
+MICRO: Minimizar o somatório de:
+
+▬ Custo por quilômetro percorrido por cada veículo;
+▬ Custo por hora de uso de cada tipo de veículo (deslocamentos, carregamentos e descarregamentos);
+▬ Custo fixo de uso de cada tipo de veículo.
+
+
+• Fase 1 - subdivisão da área de cobertura de clientes igual à quantidade de centros de
+distribuição disponível, de forma que cada centro seja responsável somente pela sua área.
+Esta divisão deve deixar as áreas de atuação dos motoristas relativamente homogêneas
+quanto à demanda de clientes;
+
+• Fase 2 - roteirização de cada região, levando em conta as características já citadas.
+
+######################
+    VEÍCULOS
+###################### 
+Tipos de veículos:
+- Carros;
+- Vans próprias;
+- Vans tercerizadas;
+- Mini-vans;
+- Motocicletas.
+
+Particularidades:
+- Número máximo de unidades disponível;
+- Velocidade de locomoção DISTRIBUIDORA → PRIMEIRA ENTREGA;
+    • Mesma velocidade que ÚLTIMA ENTREGA → DISTRIBUIDORA;
+- Velocidade entre duas entregas;
+- Tempo médio para carregar um pacote no veículo;
+- Tempo médio para descarregar um pacote no veículo e entregá-lo ao cliente;
+- Custo por hora de uso do veículo;
+- Custo por quilômetro percorrido pelo veículo;
+- Custo fixo pelo uso diário do veículo.
+
+▬ Capacidade de cada veículo: Volume em m³
+
+▬ Limitação de valor monetário por veículo
+
+
+######################
+    PEDIDO
+###################### 
+Cada pedido contém:
+- volume (m³);
+- valor (R$);
+- quantidade de pacotes.
+
+
+######################
+    MOTORISTA
+###################### 
+
+▬ Limite de trabalho para motorista: 7 HORAS
+
+_________________________________________________
+
+Cada motorista coleta de APENAS uma distribuidora
+
+Cada distribuidora pode receber VÁRIOS motoristas
+_________________________________________________
+
+
+
+Distâncias (Km) entre pontos de entrega e distribuidora são conhecidas!
+
+
