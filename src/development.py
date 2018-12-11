@@ -5,7 +5,7 @@
 
 # In[1]:
 
-
+# with open('C:/Users/Breno/Desktop/graph-theory-practical-challenge/assets/InstanciaTeste.txt') as file:
 with open('C:/Users/Guilherme/Desktop/graph-theory-practical-challenge/assets/InstanciaTeste.txt') as file:
     N = int(file.readline())
     R = int(file.readline())
@@ -370,3 +370,19 @@ plt.show()
 # # Fase 2
 # 
 # ...
+from cliente import Cliente
+
+clientes = []
+
+for idx, point in enumerate(points):
+    
+    coordernadas = []
+    coordernadas.append(point[0])
+    coordernadas.append(point[1])
+    volume = float(point[2])
+    preco_mercadoria = float(point[3])
+    qtd_pacotes = float(point[4])
+    regiao = point[5]
+    qtd_vizinhos = len(points)
+
+    clientes.append(Cliente(coordernadas, volume, preco_mercadoria, qtd_pacotes, regiao, idx, qtd_vizinhos))
