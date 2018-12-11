@@ -1,8 +1,9 @@
 class Veiculo:
-    
-    #Inicializa Classe Veículo
+    '''
+    Construtor da classe
+    '''
     def __init__(self, volume, valor_maximo, velocidade_inicial_final, velocidade_normal, tempo_carga, tempo_descarga, custo_hora, custo_km, custo_fixo_diario):
-        self._tipo_de_veiculo = self._set_tipo_veiculo(volume)
+        self._tipo_de_veiculo = self.set_tipo_veiculo(volume)
         self._volume = volume
         self._valor_maximo = valor_maximo
         self._velocidade_inicial_final = velocidade_inicial_final
@@ -16,14 +17,24 @@ class Veiculo:
         self._disponivel = True
         self._jornada_disponivel = 25200 # -> 7horas em segundos
 
+    '''
+    Define para qual região o veículo será alocado
+    '''
     def set_alocacao(self, regiao):
          self._regiao_de_alocacao = regiao
          self._disponivel = False
-
+    
+    '''
+    Debita tempo da jornada, para que o veículo não trabalhe mais que 7 horas
+    '''
     def debita_jornada(self, tempo):
         self._jornada_disponivel = self._jornada_disponivel - tempo
 
-    def _set_tipo_veiculo(self, volume):
+    '''
+    Define qual o tipo de véiculo de acordo com os valores fixados no arquivo
+    gerador de instâncias para o trabalho
+    '''
+    def set_tipo_veiculo(self, volume):
         if(volume >= 8 and volume <= 16):
             tipo = "Van"
         elif(volume >= 2 and volume <= 4):
@@ -36,7 +47,6 @@ class Veiculo:
             tipo = "Van terceirizada"
         else:
             tipo = "Erro na leitura"
-        
         return tipo
 
     '''

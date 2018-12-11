@@ -27,10 +27,10 @@ class Reader(object):
     def _get_arquivo_path (self):
 
         path = None
-        nome_arquivo = 'instancia'
+        nome_arquivo = 'InstanciaTeste.txt'
 
         # Navega pela pasta a procura do arquivo
-        for root, dirs, files in os.walk("../instances"):
+        for root, dirs, files in os.walk("assets/"):
             if path is None: # Evita encontrar dois arquivos com o mesmo nome
                 for file in files:
                     if nome_arquivo in file:
@@ -55,7 +55,7 @@ class Reader(object):
     Retorna o numero de clientes
     '''
     def get_qtd_clientes(self):
-        return int(self.__arquivo[0])
+        return int(self.__arquivo[0])-int(self.__arquivo[1])
 
     '''
     Retorna o numero de sub-regioes
@@ -97,3 +97,15 @@ class Reader(object):
         coordenadas = [[float(y) for y in x] for x in coordenadas]
 
         return coordenadas
+
+    def get_clientes(self):
+        qtd_clientes = self.get_qtd_clientes()
+        print(qtd_clientes)
+        ultima_linha_clientes = 9 + qtd_clientes
+
+        clientes = self.__arquivo[9:ultima_linha_clientes]
+
+        # Quebra cada linha transformando cada um de seus únicos elementos em uma lista de elementos 
+        clientes = [list(clientes.split()) for clientes in clientes] 
+
+        return clientes

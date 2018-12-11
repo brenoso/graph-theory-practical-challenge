@@ -3,23 +3,24 @@
 '''
 Classe que representa um vértice do grafo (cliente)
 '''
-class Cliente(object):
+class Cliente:
 
     '''
     Construtor da classe
     '''
-    def __init__(self, coordernadas, volume, preco_mercadoria, qtd_pacotes, regiao, label, qtd_vizinhos):
+    def __init__(self, x, y, volume, preco_mercadoria, qtd_pacotes, regiao, label, qtd_vizinhos):
 
         # Variaveis referentes as mercadorias
         self._volume_total = volume
         self._preco_mercadoria_total = preco_mercadoria
         self._qtd_pacotes_total = qtd_pacotes
 
-        self._volumes_por_pacote = self._volume_total / self._qtd_pacotes_total
-        self._preco_mercadoria_por_pacote = self._preco_mercadoria_total / self._qtd_pacotes_total
+        self._volumes_por_pacote = 0#self._volume_total / self._qtd_pacotes_total
+        self._preco_mercadoria_por_pacote = 0#self._preco_mercadoria_total / self._qtd_pacotes_total
 
         # Variaveis referentes a localizacao
-        self._coordenadas = coordernadas
+        self._coordenada_x = x
+        self._coordenada_y = y
         self._regiao = regiao
         self._sendo_visitado = False
         self._tem_demanda = True
@@ -71,8 +72,11 @@ class Cliente(object):
     def get_regiao(self):
         return self._regiao
 
-    def get_coodernadas(self):
-        return self._coordenadas
+    def get_coordernada_x(self):
+        return self._coordenada_x
+    
+    def get_coordernada_y(self):
+        return self._coordenada_y
     
     def get_sendo_visitado(self):
         return self._sendo_visitado
