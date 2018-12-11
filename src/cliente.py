@@ -91,9 +91,6 @@ class Cliente:
 
     def get_qtd_pacotes_total(self):
         return self._qtd_pacotes_total
-    
-    def get_volume(self):
-        return self._volume_total
 
     def set_sendo_visitado(self):
         self._sendo_visitado = True
