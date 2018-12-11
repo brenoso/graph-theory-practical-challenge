@@ -17,6 +17,9 @@ class Centro:
         # centro e sera efetuada a distribuicao mais precisa possivel dos veiculos para cada centro
         self._veiculos = None
     
+    def __str__(self):
+        return "Centro: " + str(self._label) + "\t Qtd de Cliente: " + str(self._qtd_clientes) + "\t Volume Total: " + str(self._volume_total) 
+        
     def _calcula_volume_total(self, clientes):
         
         somatorio_volume_clientes = sum(cliente.get_volume_total() for cliente in clientes)
