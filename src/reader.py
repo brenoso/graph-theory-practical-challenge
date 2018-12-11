@@ -100,7 +100,6 @@ class Reader(object):
 
     def get_clientes(self):
         qtd_clientes = self.get_qtd_clientes()
-        print(qtd_clientes)
         ultima_linha_clientes = 9 + qtd_clientes
 
         clientes = self.__arquivo[9:ultima_linha_clientes]

@@ -72,10 +72,10 @@ class Cliente:
     def get_regiao(self):
         return self._regiao
 
-    def get_coordernada_x(self):
+    def get_coordenada_x(self):
         return self._coordenada_x
     
-    def get_coordernada_y(self):
+    def get_coordenada_y(self):
         return self._coordenada_y
     
     def get_sendo_visitado(self):
