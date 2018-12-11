@@ -80,6 +80,15 @@ class Cliente:
     def get_preco_mercadoria_pacote(self):
         return self._preco_mercadoria_por_pacote
 
+    def get_label(self):
+        return self._label
+
+    def get_qtd_pacotes_total(self):
+        return self._qtd_pacotes_total
+    
+    def get_volume(self):
+        return self._volume_total
+
     def set_sendo_visitado(self):
         self._sendo_visitado = True
 
