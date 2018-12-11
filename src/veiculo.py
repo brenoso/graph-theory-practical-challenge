@@ -2,6 +2,7 @@ class Veiculo:
     
     #Inicializa Classe Veículo
     def __init__(self, volume, valor_maximo, velocidade_inicial_final, velocidade_normal, tempo_carga, tempo_descarga, custo_hora, custo_km, custo_fixo_diario):
+        self._tipo_de_veiculo = self._set_tipo_veiculo(volume)
         self._volume = volume
         self._valor_maximo = valor_maximo
         self._velocidade_inicial_final = velocidade_inicial_final
@@ -22,7 +23,22 @@ class Veiculo:
     def debita_jornada(self, tempo):
         self._jornada_disponivel = self._jornada_disponivel - tempo
 
-    
+    def _set_tipo_veiculo(self, volume):
+        if(volume >= 8 and volume <= 16):
+            tipo = "Van"
+        elif(volume >= 2 and volume <= 4):
+            tipo = "Mini-Van"
+        elif(volume >= 0.7 and volume <= 1.4):
+            tipo = "Comum"
+        elif(volume >= 0.2 and volume <= 0.4):
+            tipo = "Motocicleta"
+        elif(volume >= 0.08 and volume <= 0.16):
+            tipo = "Van terceirizada"
+        else:
+            tipo = "Erro na leitura"
+        
+        return tipo
+
     '''
     Métodos GET para os atributos da classe
     '''
