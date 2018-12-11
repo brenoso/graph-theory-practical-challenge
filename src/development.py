@@ -385,10 +385,10 @@ for idx, point in enumerate(points):
     volume = float(point[2])
     preco_mercadoria = float(point[3])
     qtd_pacotes = float(point[4])
-    regiao = point[5]
+    centro = point[5]
     qtd_vizinhos = len(points)
 
-    clientes.append(Cliente(coordenadas, volume, preco_mercadoria, qtd_pacotes, regiao, idx, qtd_vizinhos))
+    clientes.append(Cliente(coordenadas, volume, preco_mercadoria, qtd_pacotes, centro, idx, qtd_vizinhos))
 
 #Instancia os centros de distribuicao
 centros = []
@@ -399,6 +399,7 @@ for idx, center in enumerate(distribuitions):
     coordenadas.append(center[1])
     clientes_do_centro = []
     #  Pega todos os clientes que pertencem ao centro em questao
-    clientes_do_centro = [cliente for cliente in clientes if cliente.get_regiao() == idx]
+    clientes_do_centro = [cliente for cliente in clientes if cliente.get_centro() == idx]
+    label = idx
 
-    centros.append(Centro(coordenadas, clientes_do_centro))
+    centros.append(Centro(coordenadas, clientes_do_centro, label))

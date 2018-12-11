@@ -5,12 +5,13 @@ class Centro:
     '''
     Construtor da classe
     '''
-    def __init__(self, coordenadas, clientes):
+    def __init__(self, coordenadas, clientes, label):
         self._coordenadas = coordenadas
         self._clientes = clientes
         self._qtd_clientes = len(clientes)
         self._distancia_centro_ao_cliente = [None] * self._qtd_clientes  #Inicialmente a distancia para cada vertice é desconhecida
         self._volume_total = self._calcula_volume_total(clientes)
+        self._label = label
 
         # Inicialmente sem nenhum veiculo, depois será feita uma heurística a partir da demanda de cada
         # centro e sera efetuada a distribuicao mais precisa possivel dos veiculos para cada centro

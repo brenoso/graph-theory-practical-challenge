@@ -8,7 +8,7 @@ class Cliente:
     '''
     Construtor da classe
     '''
-    def __init__(self, coordenadas, volume, preco_mercadoria, qtd_pacotes, regiao, label, qtd_vizinhos):
+    def __init__(self, coordenadas, volume, preco_mercadoria, qtd_pacotes, centro, label, qtd_vizinhos):
 
         # Variaveis referentes as mercadorias
         self._volume_total = volume
@@ -20,7 +20,7 @@ class Cliente:
 
         # Variaveis referentes a localizacao
         self._coordenadas = coordenadas
-        self._regiao = regiao
+        self._centro = centro
         self._sendo_visitado = False
         self._tem_demanda = True
 
@@ -71,8 +71,8 @@ class Cliente:
     def tem_demanda(self):
         return self._tem_demanda
     
-    def get_regiao(self):
-        return self._regiao
+    def get_centro(self):
+        return self._centro
 
     def get_coordenadas(self):
         return self._coordenadas
