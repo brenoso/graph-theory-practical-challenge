@@ -372,7 +372,9 @@ plt.show()
 # 
 # ...
 from cliente import Cliente
+from centro import Centro
 
+# Instancia os clientes
 clientes = []
 
 for idx, point in enumerate(points):
@@ -387,3 +389,7 @@ for idx, point in enumerate(points):
     qtd_vizinhos = len(points)
 
     clientes.append(Cliente(coordernadas, volume, preco_mercadoria, qtd_pacotes, regiao, idx, qtd_vizinhos))
+
+#Instancia os centros de distribuicao
+centros = []
+
