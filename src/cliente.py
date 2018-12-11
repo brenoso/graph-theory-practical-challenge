@@ -27,6 +27,9 @@ class Cliente:
         # Variaveis referente aos objetos
         self._label = label
         self._distancia_vertices = [None] * qtd_vizinhos  #Inicialmente a distancia para cada vertice é desconhecida
+    
+    def __str__(self):
+        return "Cliente: " + str(self._label) + "\t Volume do Pedido: " + str(self._volume_total) + "\t Qtd Pacotes: " + str(self._qtd_pacotes_total)
 
     '''
     É esperado que o veiculo consulte a quantidade de volume total
