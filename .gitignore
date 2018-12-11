@@ -3,3 +3,4 @@ rst/*
 .vscode
 desktop.ini
 __pycache__
+get-pip.py

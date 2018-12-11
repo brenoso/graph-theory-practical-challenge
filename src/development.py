@@ -5,9 +5,9 @@
 
 # In[1]:
 
-# with open('C:/Users/Breno/Desktop/graph-theory-practical-challenge/assets/InstanciaTeste.txt') as file:
+with open('C:/Users/Breno/Desktop/graph-theory-practical-challenge/assets/InstanciaTeste.txt') as file:
 # with open('C:/Users/Guilherme/Desktop/graph-theory-practical-challenge/assets/InstanciaTeste.txt') as file:
-with open('/home/breno/projetos/graph-theory-practical-challenge/assets/InstanciaTeste.txt') as file:
+# with open('/home/breno/projetos/graph-theory-practical-challenge/assets/InstanciaTeste.txt') as file:
     N = int(file.readline())
     R = int(file.readline())
     K = int(file.readline())
@@ -45,7 +45,7 @@ plt.xlabel("x")
 plt.ylabel("y")
 
 #show = exibe a plotagem dos pontos no plano cartesiano
-plt.show()
+# plt.show()
 
 
 # # Fase 1
@@ -84,7 +84,7 @@ for p in points:
 plt.axis('equal')
 plt.xlabel("x")
 plt.ylabel("y")
-plt.show()
+# plt.show()
 
 
 # ## Segunda Abordagem
@@ -111,7 +111,7 @@ for x,y,_,_,_,_ in points:
     plt.scatter(float(x), float(y), color='blue')
 plt.axis('equal')
 
-plt.show()
+# plt.show()
 
 point = Point(0, 0)
 polygon = Polygon([vor.vertices[i] for i in vor.regions[5] if not i == '-1'])
@@ -254,7 +254,7 @@ plt.axis('equal')
 plt.xlim(vor.min_bound[0] - 20.1, vor.max_bound[0] + 20.1)
 plt.ylim(vor.min_bound[1] - 20.1, vor.max_bound[1] + 40.1)
 
-plt.show()
+# plt.show()
 
 
 # ## Heurística para melhoramento das divisões das regiões
@@ -372,18 +372,34 @@ plt.show()
 # 
 # ...
 from cliente import Cliente
+from centro import Centro
 
+# Instancia os clientes
 clientes = []
 
 for idx, point in enumerate(points):
     
-    coordernadas = []
-    coordernadas.append(point[0])
-    coordernadas.append(point[1])
+    coordenadas = []
+    coordenadas.append(point[0])
+    coordenadas.append(point[1])
     volume = float(point[2])
     preco_mercadoria = float(point[3])
     qtd_pacotes = float(point[4])
-    regiao = point[5]
+    centro = point[5]
     qtd_vizinhos = len(points)
 
-    clientes.append(Cliente(coordernadas, volume, preco_mercadoria, qtd_pacotes, regiao, idx, qtd_vizinhos))
+    clientes.append(Cliente(coordenadas, volume, preco_mercadoria, qtd_pacotes, centro, idx, qtd_vizinhos))
+
+#Instancia os centros de distribuicao
+centros = []
+
+for idx, center in enumerate(distribuitions):
+    coordenadas = []
+    coordenadas.append(center[0])
+    coordenadas.append(center[1])
+    clientes_do_centro = []
+    #  Pega todos os clientes que pertencem ao centro em questao
+    clientes_do_centro = [cliente for cliente in clientes if cliente.get_centro() == idx]
+    label = idx
+
+    centros.append(Centro(coordenadas, clientes_do_centro, label))
