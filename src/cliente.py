@@ -36,7 +36,7 @@ class Cliente:
     '''
     def receber_volume(self, volume_recebido):
 
-        volume_disponivel = self.get_volume_disponivel_para_entrega()
+        volume_disponivel = self.get_volume_total()
 
         if (volume_recebido <= volume_disponivel):
             self._volume_total = self._volume_total - volume_recebido
@@ -57,13 +57,16 @@ class Cliente:
     o veiculo entregar o total de volume disponivel, ele entregara um valor multiplo
     do volume por pacote desse cliente, que representara um numero inteiro de pacotes
     '''
-    def get_volume_disponivel_para_entrega(self):
+    def get_volumes_disponiveis_para_entrega(self):
 
         d = dict()
         d['volume_total_disponivel'] = self._volume_total
         d['volumes_por_pacote'] = self._volumes_por_pacote
 
-        return d 
+        return d
+
+    def get_volume_total(self):
+        return self._volume_total
 
     def tem_demanda(self):
         return self._tem_demanda

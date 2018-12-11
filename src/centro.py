@@ -1,15 +1,35 @@
+from cliente import Cliente
+from veiculo import Veiculo
+
 class Centro:
     '''
     Construtor da classe
     '''
-    def __init__(self, coordenadas, qtd_clientes):
-        self._coodernadas = coordenadas
-        self._quantidade_de_clientes = 0
-        
-        self._distancia_centro_ao_cliente = [None] * qtd_clientes  #Inicialmente a distancia para cada vertice é desconhecida
-        self._volume_total = 0
+    def __init__(self, coordenadas, clientes):
+        self._coordenadas = coordenadas
+        self._clientes = clientes
+        self._qtd_clientes = len(clientes)
+        self._distancia_centro_ao_cliente = [None] * self._qtd_clientes  #Inicialmente a distancia para cada vertice é desconhecida
+        self._volume_total = self._calcula_volume_total(clientes)
+
+        # Inicialmente sem nenhum veiculo, depois será feita uma heurística a partir da demanda de cada
+        # centro e sera efetuada a distribuicao mais precisa possivel dos veiculos para cada centro
+        self._veiculos = None
     
-    def set_distacancia_centro_cliente(self, posicao, distancia):
+    def _calcula_volume_total(self, clientes):
+        
+        somatorio_volume_clientes = sum(cliente.get_volume_total() for cliente in clientes)
+        
+        return somatorio_volume_clientes
+
+    def adicionar_veiculos(self, veiculos):
+        self._veiculos = veiculos
+
+    '''
+    Getters e Setters
+    '''
+
+    def set_distancia_centro_cliente(self, posicao, distancia):
         self._distancia_centro_ao_cliente.pop(posicao)
         self._distancia_centro_ao_cliente.insert(posicao, distancia)
     
@@ -17,7 +37,7 @@ class Centro:
         return self._coordenadas
 
     def get_quantidade_clientes(self):
-        return self._quantidade_de_clientes
+        return self._qtd_clientes
     
     def get_volume_total(self):
         return self._volume_total
