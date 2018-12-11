@@ -27,6 +27,9 @@ class Cliente:
         # Variaveis referente aos objetos
         self._label = label
         self._distancia_vertices = [None] * qtd_vizinhos  #Inicialmente a distancia para cada vertice é desconhecida
+    
+    def __str__(self):
+        return "Cliente: " + str(self._label) + "\t Volume do Pedido: " + str(self._volume_total) + "\t Qtd Pacotes: " + str(self._qtd_pacotes_total)
 
     '''
     É esperado que o veiculo consulte a quantidade de volume total
@@ -82,6 +85,12 @@ class Cliente:
 
     def get_preco_mercadoria_pacote(self):
         return self._preco_mercadoria_por_pacote
+
+    def get_label(self):
+        return self._label
+
+    def get_qtd_pacotes_total(self):
+        return self._qtd_pacotes_total
 
     def set_sendo_visitado(self):
         self._sendo_visitado = True
