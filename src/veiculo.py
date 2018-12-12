@@ -29,6 +29,9 @@ class Veiculo:
         self._tempo_jornada_disponivel = 25200 # -> 7horas em segundos
         self._tipo_de_veiculo = tipo_veiculo
     
+    def __str__(self):
+        return "Veículo: " + self._tipo_de_veiculo + "\tDisponível: " + str(self._disponivel_para_alocacao) + "\tVolume Carregado: " + str(self._volume_carregado)
+
     '''
     Debita tempo da jornada, para que o veículo não trabalhe mais que 7 horas
     '''
