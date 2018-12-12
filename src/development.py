@@ -21,8 +21,8 @@
 # In[1]:
 
 
-# with open('C:/Users/Breno/Desktop/graph-theory-practical-challenge/assets/InstanciaTeste.txt') as file:
-with open('/home/breno/projetos/graph-theory-practical-challenge/assets/InstanciaTeste.txt') as file:
+with open('C:/Users/Breno/Desktop/graph-theory-practical-challenge/assets/InstanciaTeste.txt') as file:
+# with open('/home/breno/projetos/graph-theory-practical-challenge/assets/InstanciaTeste.txt') as file:
     N = int(file.readline())
     R = int(file.readline())
     K = int(file.readline())
@@ -336,8 +336,41 @@ for idx, center in enumerate(centros_distribuicao):
     
 [print(centro) for centro in lista_de_centros]
 
+# ## Veiculos
+
+# In[8]:
+
 from veiculo import Veiculo
 
-# Atributos de veiculos que nao pertencerao a classe Veiculo
-# quantidade de veículos disponíveis;
-# número máximo de unidades disponível (numero total de veiculos)
+lista_de_veiculos = []
+
+for idx, veiculo in enumerate(vehicles):
+
+    volume_maximo_suportado = float(veiculo[0])
+    valor_maximo_suportado = float(veiculo[1])
+    velocidade_inicial_final = float(veiculo[3])
+    velocidade_normal = float(veiculo[4])
+    tempo_carga = float(veiculo[5])
+    tempo_descarga = float(veiculo[6])
+    custo_medio_hora = float(veiculo[7])
+    custo_medio_km = float(veiculo[8])
+    custo_fixo_diario = float(veiculo[9])
+
+    quantidade_veiculos_disponiveis = int(veiculo[2]) #Quantidade de veiculo disponivel de cada tipo
+
+    tipos = {0 : 'Van',
+           1 : 'Mini-Van',
+           2 : 'Comum',
+           3 : 'Motocicleta',
+           4 : 'Van terceirizada'}
+
+    tipo_veiculo = tipos.get(idx)
+
+    # Para a quantidade de veiculo de cada tipo, cria os respectivos veiculos
+    for veiculos in range(quantidade_veiculos_disponiveis):
+        lista_de_veiculos.append(Veiculo(volume_maximo_suportado, valor_maximo_suportado,
+                                               velocidade_inicial_final, velocidade_normal,
+                                                tempo_carga, tempo_descarga, custo_medio_hora,
+                                                custo_medio_km, custo_fixo_diario, tipo_veiculo))
+    
+[print(veiculo) for veiculo in lista_de_veiculos]
