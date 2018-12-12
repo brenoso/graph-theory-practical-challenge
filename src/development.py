@@ -335,3 +335,9 @@ for idx, center in enumerate(centros_distribuicao):
     lista_de_centros.append(Centro(coordenadas, clientes_do_centro, label))
     
 [print(centro) for centro in lista_de_centros]
+
+from veiculo import Veiculo
+
+# Atributos de veiculos que nao pertencerao a classe Veiculo
+# quantidade de veículos disponíveis;
+# número máximo de unidades disponível (numero total de veiculos)
