@@ -21,7 +21,8 @@
 # In[1]:
 
 
-with open('C:/Users/Breno/Desktop/graph-theory-practical-challenge/assets/InstanciaTeste.txt') as file:
+# with open('C:/Users/Breno/Desktop/graph-theory-practical-challenge/assets/InstanciaTeste.txt') as file:
+with open('/home/breno/projetos/graph-theory-practical-challenge/assets/InstanciaTeste.txt') as file:
     N = int(file.readline())
     R = int(file.readline())
     K = int(file.readline())
@@ -57,7 +58,7 @@ plt.xlabel("x")
 plt.ylabel("y")
 
 #show = exibe a plotagem dos pontos no plano cartesiano
-plt.show()
+#plt.show()
 
 
 # # Fase 1
@@ -98,7 +99,7 @@ for p in clientes:
 plt.axis('equal')
 plt.xlabel("x")
 plt.ylabel("y")
-plt.show()
+#plt.show()
 
 
 # ## Segunda Abordagem
@@ -125,7 +126,7 @@ for x,y,_,_,_,_ in clientes:
     plt.scatter(float(x), float(y), color='blue')
 plt.axis('equal')
 
-plt.show()
+#plt.show()
 
 point = Point(0, 0)
 polygon = Polygon([vor.vertices[i] for i in vor.regions[5] if not i == '-1'])
@@ -268,7 +269,7 @@ plt.axis('equal')
 plt.xlim(vor.min_bound[0] - 20.1, vor.max_bound[0] + 20.1)
 plt.ylim(vor.min_bound[1] - 20.1, vor.max_bound[1] + 40.1)
 
-plt.show()
+#plt.show()
 
 
 # ## Heurística para melhoramento das divisões das regiões
