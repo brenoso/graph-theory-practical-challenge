@@ -21,7 +21,7 @@
 # In[1]:
 
 
-with open('C:/Users/Breno/Desktop/graph-theory-practical-challenge/assets/InstanciaTeste.txt') as file:
+with open('C:/Users/Guilherme/Desktop/graph-theory-practical-challenge/assets/InstanciaTeste.txt') as file:
     N = int(file.readline())
     R = int(file.readline())
     K = int(file.readline())
