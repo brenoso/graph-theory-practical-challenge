@@ -22,6 +22,7 @@
 
 
 with open('C:/Users/Breno/Desktop/graph-theory-practical-challenge/assets/InstanciaTeste.txt') as file:
+# with open('/home/breno/projetos/graph-theory-practical-challenge/assets/InstanciaTeste.txt') as file:
     N = int(file.readline())
     R = int(file.readline())
     K = int(file.readline())
@@ -57,7 +58,7 @@ plt.xlabel("x")
 plt.ylabel("y")
 
 #show = exibe a plotagem dos pontos no plano cartesiano
-plt.show()
+#plt.show()
 
 
 # # Fase 1
@@ -98,7 +99,7 @@ for p in clientes:
 plt.axis('equal')
 plt.xlabel("x")
 plt.ylabel("y")
-plt.show()
+#plt.show()
 
 
 # ## Segunda Abordagem
@@ -125,7 +126,7 @@ for x,y,_,_,_,_ in clientes:
     plt.scatter(float(x), float(y), color='blue')
 plt.axis('equal')
 
-plt.show()
+#plt.show()
 
 point = Point(0, 0)
 polygon = Polygon([vor.vertices[i] for i in vor.regions[5] if not i == '-1'])
@@ -268,7 +269,7 @@ plt.axis('equal')
 plt.xlim(vor.min_bound[0] - 20.1, vor.max_bound[0] + 20.1)
 plt.ylim(vor.min_bound[1] - 20.1, vor.max_bound[1] + 40.1)
 
-plt.show()
+#plt.show()
 
 
 # ## Heurística para melhoramento das divisões das regiões
@@ -334,3 +335,42 @@ for idx, center in enumerate(centros_distribuicao):
     lista_de_centros.append(Centro(coordenadas, clientes_do_centro, label))
     
 [print(centro) for centro in lista_de_centros]
+
+# ## Veiculos
+
+# In[8]:
+
+from veiculo import Veiculo
+
+lista_de_veiculos = []
+
+for idx, veiculo in enumerate(vehicles):
+
+    volume_maximo_suportado = float(veiculo[0])
+    valor_maximo_suportado = float(veiculo[1])
+    velocidade_inicial_final = float(veiculo[3])
+    velocidade_normal = float(veiculo[4])
+    tempo_carga = float(veiculo[5])
+    tempo_descarga = float(veiculo[6])
+    custo_medio_hora = float(veiculo[7])
+    custo_medio_km = float(veiculo[8])
+    custo_fixo_diario = float(veiculo[9])
+
+    quantidade_veiculos_disponiveis = int(veiculo[2]) #Quantidade de veiculo disponivel de cada tipo
+
+    tipos = {0 : 'Van',
+           1 : 'Mini-Van',
+           2 : 'Comum',
+           3 : 'Motocicleta',
+           4 : 'Van terceirizada'}
+
+    tipo_veiculo = tipos.get(idx)
+
+    # Para a quantidade de veiculo de cada tipo, cria os respectivos veiculos
+    for veiculos in range(quantidade_veiculos_disponiveis):
+        lista_de_veiculos.append(Veiculo(volume_maximo_suportado, valor_maximo_suportado,
+                                               velocidade_inicial_final, velocidade_normal,
+                                                tempo_carga, tempo_descarga, custo_medio_hora,
+                                                custo_medio_km, custo_fixo_diario, tipo_veiculo))
+    
+[print(veiculo) for veiculo in lista_de_veiculos]
