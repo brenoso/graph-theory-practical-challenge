@@ -30,7 +30,7 @@ class Veiculo:
         self._tipo_de_veiculo = tipo_veiculo
     
     def __str__(self):
-        return "Veículo: " + self._tipo_de_veiculo + "\tDisponível: " + str(self._disponivel_para_alocacao) + "\tVolume Carregado: " + str(self._volume_carregado)
+        return "Veículo: " + self._tipo_de_veiculo + "\n\tCusto dia: " + str(self._custo_fixo_diario) + "\tCusto km: " + str(self._custo_medio_km) + "\tCusto hora: " + str(self._custo_medio_hora) + "\n\tVol. Máximo: " + str(self._volume_maximo_suportado) + "\tValor. Máximo: " + str(self._valor_maximo_suportado) + "\n\tVel. Ini/Fin: " + str(self._velocidade_inicial_final) + "\tVel. Normal: " + str(self._velocidade_normal)
 
     '''
     Debita tempo da jornada, para que o veículo não trabalhe mais que 7 horas
