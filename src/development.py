@@ -21,8 +21,8 @@
 # In[1]:
 
 
-with open('C:/Users/Breno/Desktop/graph-theory-practical-challenge/assets/InstanciaTeste.txt') as file:
-# with open('/home/breno/projetos/graph-theory-practical-challenge/assets/InstanciaTeste.txt') as file:
+#with open('C:/Users/Breno/Desktop/graph-theory-practical-challenge/assets/InstanciaTeste.txt') as file:
+with open('/home/breno/projetos/graph-theory-practical-challenge/assets/InstanciaTeste.txt') as file:
     N = int(file.readline())
     R = int(file.readline())
     K = int(file.readline())
@@ -391,6 +391,13 @@ for idx, veiculo in enumerate(vehicles):
 # otimizada para as demandas dos clientes, de forma a balancear os clientes atendidos por cada centro.
 
 
+'''
+Calcula para cada tipo de veiculo, o total de veiculos
+por centro.
+Também faz o calculo dos veiculos que 'sobrarão' caso a conta não
+dê valores exatos. Esses veículos 'sobressalentes' serão alocados de uma maneira mais eficiente
+de acordo com a demanda de cada centro
+'''
 total_veiculos_por_tipo = []
 
 for idx, veiculo in enumerate(vehicles):
@@ -407,6 +414,7 @@ for idx, veiculos in enumerate(total_veiculos_por_tipo):
     # Se a divisão for inteira, armazena a quantidade exata de veiculos pra cada centro
     if (veiculos % len(centros_distribuicao) == 0):
         total_veiculos_por_tipo_por_centro.append(veiculos / len(centros_distribuicao))
+
     # Se a divisão der resto, armazena o valor mais próximo abaixo que a divisão dá inteira e
     # adiciona os veiculos que sobrarem na lista de veiculos sobressalentes, para serem distribuidos depois
     else:
@@ -415,7 +423,10 @@ for idx, veiculos in enumerate(total_veiculos_por_tipo):
         veiculos_inteiros = veiculos - resto
         total_veiculos_por_tipo_por_centro.append(veiculos_inteiros / len(centros_distribuicao))
 
-copia_lista_veiculos = lista_de_veiculos.copy()
+
+'''
+Efetua a alocação dos veiculos 'inteiros' para cada centro.
+'''
 
 tipos = {0 : 'Van',
         1 : 'Mini-Van',
@@ -423,11 +434,41 @@ tipos = {0 : 'Van',
         3 : 'Motocicleta',
         4 : 'Van terceirizada'}
 
-# Aloca os veiculos para os centros
-# for idx, centro in enumerate(lista_de_centros):
-#     veiculos_para_alocar = total_veiculos_por_tipo_por_centro[idx]
-    
-#     for idx, veiculo in enumerate(copia_lista_veiculos):
-#         if (veiculo.get_tipo_de_veiculo() == tipos.get(idx)):
-#             copia_lista_veiculos
 
+# Cria e popula uma lista de veiculos separados por seus tipos
+lista_veiculos_por_tipo = []
+for idx in range(len(tipos)):
+    lista_veiculos_por_tipo.append([veiculo for veiculo in lista_de_veiculos if veiculo.get_tipo_de_veiculo() == tipos.get(idx)])
+
+# Aloca os veiculos 'inteiros' em ordem do tipo de veiculo nos centros (setando os labels dos respectivos centros)
+for tipo_veiculo in range(len(tipos)):
+    
+    label_centro = 0
+
+    # Numero de veiculos do tipo em questao que serao alocados POR CENTRO
+    contador_por_centro = total_veiculos_por_tipo_por_centro[tipo_veiculo]
+
+    # Numero TOTAL de veiculos do tipo em questao que serao alocados
+    quantidade_veiculos_alocar = len(lista_veiculos_por_tipo[tipo_veiculo]) - int(total_veiculos_por_tipo_sobressalentes[tipo_veiculo])
+
+    # Para cada um dos veiculos totais a serem alocados, lembrando que os veiculos totais
+    # podem não ser todos os veiculos desse tipo, pois os sobressalente serão alocados posteriormente
+    for idx in range(quantidade_veiculos_alocar):
+
+        # Aloca o veiculo para o centro
+        lista_veiculos_por_tipo[tipo_veiculo][idx].set_alocacao(label_centro)
+
+        # Essa variavel será decrementada até que chegue a 0, onde
+        # então significará que o numero de veiculos por centro alocados já foi atingido
+        # e poderemos passar a alocar os próximos veiculos para os proximos centros
+        contador_por_centro = contador_por_centro - 1
+
+        if (contador_por_centro == 0):
+            contador_por_centro = total_veiculos_por_tipo_por_centro[tipo_veiculo]
+            label_centro = label_centro + 1
+
+'''
+Efetua a alocação dos veiculos 'sobressalentes' para cada centro.
+'''
+
+lista_de_veiculos
