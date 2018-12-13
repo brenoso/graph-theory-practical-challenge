@@ -85,3 +85,6 @@ class Veiculo:
     
     def get_tempo_jornada_disponivel(self):
         return self._tempo_jornada_disponivel
+    
+    def get_tipo_de_veiculo(self):
+        return self._tipo_de_veiculo

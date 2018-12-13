@@ -70,6 +70,9 @@ class Cliente:
 
     def get_volume_total(self):
         return self._volume_total
+    
+    def get_valor_total(self):
+        return self._preco_mercadoria_total
 
     def tem_demanda(self):
         return self._tem_demanda

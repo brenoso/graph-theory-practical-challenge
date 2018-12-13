@@ -11,6 +11,7 @@ class Centro:
         self._qtd_clientes = len(clientes)
         self._distancia_centro_ao_cliente = [None] * self._qtd_clientes  #Inicialmente a distancia para cada vertice é desconhecida
         self._volume_total = self._calcula_volume_total(clientes)
+        self._valor_total_todos_clientes = self._calcula_valor_total_todos_clientes(clientes)
         self._label = label
 
         # Inicialmente sem nenhum veiculo, depois será feita uma heurística a partir da demanda de cada
@@ -25,6 +26,12 @@ class Centro:
         somatorio_volume_clientes = sum(cliente.get_volume_total() for cliente in clientes)
         
         return somatorio_volume_clientes
+
+    def _calcula_valor_total_todos_clientes(self, clientes):
+        
+        somatorio_valor_total_clientes = sum(cliente.get_valor_total() for cliente in clientes)
+        
+        return somatorio_valor_total_clientes
 
     def adicionar_veiculos(self, veiculos):
         self._veiculos = veiculos

@@ -374,3 +374,60 @@ for idx, veiculo in enumerate(vehicles):
                                                 custo_medio_km, custo_fixo_diario, tipo_veiculo))
     
 [print(veiculo) for veiculo in lista_de_veiculos]
+
+# ## Alocação de Veiculos para os Centros de Distribuição
+
+# In[9]:
+
+# Pelas nossas análises, os pontos que levamos em conta para efetuar a alocação ideal dos veiculos para
+# cada cluster (Centro de Distribuição) seriam o Volume Máximo Suportado e o Valor Máximo Suportado por cada veiculo em relação
+# ao Valor Total e o Volume Total de todos os clientes que compõe a cada Centro. Sendo assim, a ideia é tentar distribuir os veículos
+# nos centros de modo a nunca faltar veiculos para cada centro e chegar o mais próximo do mínimo de veículos por centro.
+# Porém pelas instâncias geradas pelo gerador, notamos que teríamos uma enorme folga em relação as capacidades dos veículos com a demanda
+# total de cada centro (total dos clientes), levando em conta o volume máximo e o valor máximo de cada cliente. Portanto, decidimos dividir
+# igualmente os veiculos para os centros e, ao realizar as operações de entrega dos volumes para os clientes, utilizar os veiculos alocados
+# em cada centro, do mais barato para o mais caro até suprir a demanda.
+# Será garantida uma boa solução para essa divisão levando em conta a heurística de divisão dos clientes por centros, que deve ser
+# otimizada para as demandas dos clientes, de forma a balancear os clientes atendidos por cada centro.
+
+
+total_veiculos_por_tipo = []
+
+for idx, veiculo in enumerate(vehicles):
+
+    total_veiculos_por_tipo.append(float(veiculo[2]))
+
+ # Os veiculos sobressalentes cujas divisões não resultaram em numeros inteiros
+ # serão alocados posteriormente para os centros com maior demanda um a um, do maior para o menor
+total_veiculos_por_tipo_por_centro = []
+total_veiculos_por_tipo_sobressalentes = [0,0,0,0,0] # Os veiculos que sobrarem da divisão serão armazenados aqui
+
+for idx, veiculos in enumerate(total_veiculos_por_tipo):
+    
+    # Se a divisão for inteira, armazena a quantidade exata de veiculos pra cada centro
+    if (veiculos % len(centros_distribuicao) == 0):
+        total_veiculos_por_tipo_por_centro.append(veiculos / len(centros_distribuicao))
+    # Se a divisão der resto, armazena o valor mais próximo abaixo que a divisão dá inteira e
+    # adiciona os veiculos que sobrarem na lista de veiculos sobressalentes, para serem distribuidos depois
+    else:
+        resto = veiculos % len(centros_distribuicao)
+        total_veiculos_por_tipo_sobressalentes[idx] = resto
+        veiculos_inteiros = veiculos - resto
+        total_veiculos_por_tipo_por_centro.append(veiculos_inteiros / len(centros_distribuicao))
+
+copia_lista_veiculos = lista_de_veiculos.copy()
+
+tipos = {0 : 'Van',
+        1 : 'Mini-Van',
+        2 : 'Comum',
+        3 : 'Motocicleta',
+        4 : 'Van terceirizada'}
+
+# Aloca os veiculos para os centros
+# for idx, centro in enumerate(lista_de_centros):
+#     veiculos_para_alocar = total_veiculos_por_tipo_por_centro[idx]
+    
+#     for idx, veiculo in enumerate(copia_lista_veiculos):
+#         if (veiculo.get_tipo_de_veiculo() == tipos.get(idx)):
+#             copia_lista_veiculos
+
