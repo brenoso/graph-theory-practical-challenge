@@ -356,6 +356,7 @@ for idx, center in enumerate(centros_distribuicao):
     
 [print(centro) for centro in lista_de_centros]
 
+
 # ## Veiculos
 
 # In[8]:
