@@ -20,18 +20,15 @@
 
 # In[1]:
 
-
-with open('C:/Users/Administrador/Desktop/graph-theory-practical-challenge/src/__InstanciaMayron.txt') as file:
-# with open('/home/breno/projetos/graph-theory-practical-challenge/assets/InstanciaTeste.txt') as file:
+with open('C:/Users/Breno/Desktop/graph-theory-practical-challenge/src/__InstanciaMayron.txt') as file:
+#with open('/home/breno/projetos/graph-theory-practical-challenge/assets/instancias/InstanciaTeste.txt') as file:
     N = int(file.readline())
     R = int(file.readline())
     K = int(file.readline())
     H = int(file.readline())
     centros_distribuicao = [file.readline().split() for i in range(R)]
     clientes = ["".join([file.readline(), "-1"]).split() for i in range(N-R)]
-    vehicles = [file.readline().split(' ') for i in range(K)]
-    
-
+    vehicles = [file.readline().split(' ') for i in range(K)]  
 
 # #### Exibição Inicial
 # 
@@ -40,7 +37,6 @@ with open('C:/Users/Administrador/Desktop/graph-theory-practical-challenge/src/_
 # Isto ajuda a elucidar a distribuição dos clientes para esse problema.
 
 # In[8]:
-
 
 from matplotlib import pyplot as plt
 import random
@@ -58,8 +54,8 @@ plt.xlabel("x")
 plt.ylabel("y")
 
 #show = exibe a plotagem dos pontos no plano cartesiano
-#plt.show()
 
+#plt.show()
 
 # # Fase 1
 # 
@@ -67,7 +63,6 @@ plt.ylabel("y")
 # Para cada `cliente (vértice)` calcule o `centro de distribuição` mais próximo.
 
 # In[3]:
-
 
 import sys
 import math
@@ -99,8 +94,8 @@ for p in clientes:
 plt.axis('equal')
 plt.xlabel("x")
 plt.ylabel("y")
-#plt.show()
 
+#plt.show()
 
 # ## Segunda Abordagem
 # 
@@ -109,7 +104,6 @@ plt.ylabel("y")
 # Mais informações, leia: https://pt.wikipedia.org/wiki/Diagrama_de_Voronoy
 
 # In[4]:
-
 
 from scipy.spatial import Voronoi, voronoi_plot_2d
 from shapely.geometry import Point
@@ -143,7 +137,6 @@ polygon = Polygon([vor.vertices[i] for i in vor.regions[5] if not i == '-1'])
 # ## Transformação para regiões finitas
 
 # In[5]:
-
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -271,7 +264,6 @@ plt.ylim(vor.min_bound[1] - 20.1, vor.max_bound[1] + 40.1)
 
 #plt.show()
 
-
 # ## Heurística para melhoramento das divisões das regiões
 # 
 # A ideia utilizada:
@@ -292,7 +284,6 @@ plt.ylim(vor.min_bound[1] - 20.1, vor.max_bound[1] + 40.1)
 # ## Clientes
 
 # In[6]:
-
 
 from cliente import Cliente
 
@@ -329,14 +320,11 @@ for idx in range(0, 4):
         if cliente.get_centro() == idx:
             cliente.set_distancia_para_vizinhos(clientes_de_cada_centro[idx])
 
-
 [print(cliente) for cliente in lista_de_clientes]
-
 
 # ## Centros
 
 # In[7]:
-
 
 from centro import Centro
 
@@ -395,3 +383,134 @@ for idx, veiculo in enumerate(vehicles):
                                                 custo_medio_km, custo_fixo_diario, tipo_veiculo))
     
 [print(veiculo) for veiculo in lista_de_veiculos]
+
+# ## Alocação de Veiculos para os Centros de Distribuição
+
+# In[9]:
+
+# Pelas nossas análises, os pontos que levamos em conta para efetuar a alocação ideal dos veiculos para
+# cada cluster (Centro de Distribuição) seriam o Volume Máximo Suportado e o Valor Máximo Suportado por cada veiculo em relação
+# ao Valor Total e o Volume Total de todos os clientes que compõe a cada Centro. Sendo assim, a ideia é tentar distribuir os veículos
+# nos centros de modo a nunca faltar veiculos para cada centro e chegar o mais próximo do mínimo de veículos por centro.
+# Porém pelas instâncias geradas pelo gerador, notamos que teríamos uma enorme folga em relação as capacidades dos veículos com a demanda
+# total de cada centro (total dos clientes), levando em conta o volume máximo e o valor máximo de cada cliente. Portanto, decidimos dividir
+# igualmente os veiculos para os centros e, ao realizar as operações de entrega dos volumes para os clientes, utilizar os veiculos alocados
+# em cada centro, do mais barato para o mais caro até suprir a demanda.
+# Será garantida uma boa solução para essa divisão levando em conta a heurística de divisão dos clientes por centros, que deve ser
+# otimizada para as demandas dos clientes, de forma a balancear os clientes atendidos por cada centro.
+
+
+'''
+Calcula para cada tipo de veiculo, o total de veiculos
+por centro.
+Também faz o calculo dos veiculos que 'sobrarão' caso a conta não
+dê valores exatos. Esses veículos 'sobressalentes' serão alocados de uma maneira mais eficiente
+de acordo com a demanda de cada centro
+'''
+total_veiculos_por_tipo = []
+
+for idx, veiculo in enumerate(vehicles):
+
+    total_veiculos_por_tipo.append(float(veiculo[2]))
+
+ # Os veiculos sobressalentes cujas divisões não resultaram em numeros inteiros
+ # serão alocados posteriormente para os centros com maior demanda um a um, do maior para o menor
+total_veiculos_por_tipo_por_centro = []
+total_veiculos_por_tipo_sobressalentes = [0,0,0,0,0] # Os veiculos que sobrarem da divisão serão armazenados aqui
+
+for idx, veiculos in enumerate(total_veiculos_por_tipo):
+    
+    # Se a divisão for inteira, armazena a quantidade exata de veiculos pra cada centro
+    if (veiculos % len(centros_distribuicao) == 0):
+        total_veiculos_por_tipo_por_centro.append(veiculos / len(centros_distribuicao))
+
+    # Se a divisão der resto, armazena o valor mais próximo abaixo que a divisão dá inteira e
+    # adiciona os veiculos que sobrarem na lista de veiculos sobressalentes, para serem distribuidos depois
+    else:
+        resto = veiculos % len(centros_distribuicao)
+        total_veiculos_por_tipo_sobressalentes[idx] = resto
+        veiculos_inteiros = veiculos - resto
+        total_veiculos_por_tipo_por_centro.append(veiculos_inteiros / len(centros_distribuicao))
+
+
+'''
+Efetua a alocação dos veiculos 'inteiros' para cada centro.
+'''
+
+tipos = {0 : 'Van',
+        1 : 'Mini-Van',
+        2 : 'Comum',
+        3 : 'Motocicleta',
+        4 : 'Van terceirizada'}
+
+
+# Cria e popula uma lista de veiculos separados por seus tipos
+lista_veiculos_por_tipo = []
+for idx in range(len(tipos)):
+    lista_veiculos_por_tipo.append([veiculo for veiculo in lista_de_veiculos if veiculo.get_tipo_de_veiculo() == tipos.get(idx)])
+
+# Aloca os veiculos 'inteiros' em ordem do tipo de veiculo nos centros (setando os labels dos respectivos centros)
+for tipo_veiculo in range(len(tipos)):
+    
+    label_centro = 0
+
+    # Numero de veiculos do tipo em questao que serao alocados POR CENTRO
+    contador_por_centro = total_veiculos_por_tipo_por_centro[tipo_veiculo]
+
+    # Numero TOTAL de veiculos do tipo em questao que serao alocados
+    quantidade_veiculos_alocar = len(lista_veiculos_por_tipo[tipo_veiculo]) - int(total_veiculos_por_tipo_sobressalentes[tipo_veiculo])
+
+    # Para cada um dos veiculos totais a serem alocados, lembrando que os veiculos totais
+    # podem não ser todos os veiculos desse tipo, pois os sobressalente serão alocados posteriormente
+    for idx in range(quantidade_veiculos_alocar):
+
+        # Aloca o veiculo para o centro
+        lista_veiculos_por_tipo[tipo_veiculo][idx].set_alocacao(label_centro)
+
+        # Essa variavel será decrementada até que chegue a 0, onde
+        # então significará que o numero de veiculos por centro alocados já foi atingido
+        # e poderemos passar a alocar os próximos veiculos para os proximos centros
+        contador_por_centro = contador_por_centro - 1
+
+        if (contador_por_centro == 0):
+            contador_por_centro = total_veiculos_por_tipo_por_centro[tipo_veiculo]
+            label_centro = label_centro + 1
+
+'''
+Efetua a alocação dos veiculos 'sobressalentes' para cada centro.
+'''
+# Pega os veiculos que não estão em nenhum centro
+veiculos_sem_alocacao = [veiculo for veiculo in lista_de_veiculos if veiculo.get_centro() is None]
+
+# Agrupa os veiculos que não estão em nenhum centro por Tipo
+veiculos_sem_alocacao_por_tipo = []
+for idx in range(len(tipos)):
+    veiculos_sem_alocacao_por_tipo.append([veiculo for veiculo in veiculos_sem_alocacao if veiculo.get_tipo_de_veiculo() == tipos.get(idx)])
+
+# Elimina os tipos de veiculos que não contem veiculos sem centro, caso haja
+veiculos_sem_alocacao_por_tipo = [x for x in veiculos_sem_alocacao_por_tipo if len(x) is not 0]
+
+# Ordena a lista de centros baseado em dois valores: valor_total_todos_clientes e volume_total. Assim poderemos
+# distribuir os veiculos sobressalentes de forma otimizada entre os centros com demanda maior
+lista_de_centros_ordenadas = sorted(lista_de_centros, key = lambda x: (x.get_valor_total_todos_clientes(), x.get_volume_total()), reverse=True)
+
+# Aloca os veiculos 'sobressalentes' para os centros em ordem decrescente de demanda. Ou seja,
+# para cada tipo de veiculo teremos no máximo 4 (menor numero não divisivel pelo numero de centros) veiculos sobressalentes,
+# então, para cada tipo de veiculo, o centro com maior demanda receberá um veiculo, seguido pelo 
+# segundo centro de maior demanda, até esgotarem os veiculos para cada tipo, que serão no máx 4, visto que são 5
+# centros no total.
+for i in range(len(veiculos_sem_alocacao_por_tipo)):
+    for j in range(len(veiculos_sem_alocacao_por_tipo[i])):
+        veiculos_sem_alocacao_por_tipo[i][j].set_alocacao(lista_de_centros_ordenadas[j].get_label())
+
+# Verifica se algum veiculo não foi alocado para algum centro
+veiculos_sem_alocacao = [veiculo for veiculo in lista_de_veiculos if veiculo.get_centro() is None]
+
+'''
+Efetua a alocação dos veiculos nos objetos Centro
+'''
+
+for veiculo in lista_de_veiculos:
+    label_centro = veiculo.get_centro()
+    centro = [centro for centro in lista_de_centros if centro.get_label() == label_centro]
+    centro[0].set_veiculo(veiculo)

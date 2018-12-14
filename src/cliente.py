@@ -70,6 +70,9 @@ class Cliente:
 
     def get_volume_total(self):
         return self._volume_total
+    
+    def get_valor_total(self):
+        return self._preco_mercadoria_total
 
     def tem_demanda(self):
         return self._tem_demanda
@@ -109,12 +112,13 @@ class Cliente:
             linha = [vizinho.get_label(), self.euclidian_distance(self._coordenadas, vizinho.get_coordenadas())]
             #Cada "linha" em uma posição do atributo para facilitar a busca
             self._distancia_vertices.append(linha)
-    
 
     def euclidian_distance(self, coordenadas_do_vertice, coordenadas_do_vizinho):
+
         x1 = float(coordenadas_do_vertice[0])
         y1 = float(coordenadas_do_vertice[1])
         x2 = float(coordenadas_do_vizinho[0])
         y2 = float(coordenadas_do_vizinho[1])
+        
         return math.sqrt((x2-x1)**2+(y2-y1)**2)
 
