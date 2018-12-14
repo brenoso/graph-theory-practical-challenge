@@ -8,7 +8,7 @@ class Cliente:
     '''
     Construtor da classe
     '''
-    def __init__(self, coordenadas, volume, preco_mercadoria, qtd_pacotes, centro, label, qtd_vizinhos):
+    def __init__(self, coordenadas, volume, preco_mercadoria, qtd_pacotes, centro, label):
 
         # Variaveis referentes as mercadorias
         self._volume_total = volume
@@ -26,7 +26,7 @@ class Cliente:
 
         # Variaveis referente aos objetos
         self._label = label
-        self._distancia_vertices = list()#[None] * qtd_vizinhos  #Inicialmente a distancia para cada vertice é desconhecida
+        self._distancia_vertices = [] #Inicialmente a distancia para cada vertice é desconhecida
     
     def __str__(self):
         return "Cliente: " + str(self._label) + "\t Centro de Atendimento: " + str(self._centro) + "\t Volume Pedido: " + str(self._volume_total) + "\t Qtd Pacotes: " + str(self._qtd_pacotes_total)
@@ -91,6 +91,11 @@ class Cliente:
 
     def get_qtd_pacotes_total(self):
         return self._qtd_pacotes_total
+
+    def get_distancia_ao_vizinho(self, label_vizinho):
+        #Buscará qual é a sub-lista que se encontra o valor "label_vizinho", armazenando esta sub-lista em x. 
+        #O valor retornado será (x[1]), onde x[1] corresponde ao campo da distância do cliente até o seu vizinho de região
+        return [(x[1]) for x in self._distancia_vertices if label_vizinho in x]
 
     def set_sendo_visitado(self):
         self._sendo_visitado = True
