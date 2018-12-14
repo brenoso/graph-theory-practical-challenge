@@ -17,7 +17,8 @@ class Centro:
         # centro e sera efetuada a distribuicao mais precisa possivel dos veiculos para cada centro
         self._veiculos = None
 
-        self.set_distancia_centro_cliente()
+        # No momento da incialização do Centro é calcula a distância dele para todos os seus clientes
+        self.set_distancia_centro_todos_cliente()
     
     def __str__(self):
         return "Centro: " + str(self._label) + "\t Qtd de Cliente: " + str(self._qtd_clientes) + "\t Volume Total: " + str(self._volume_total) 
@@ -49,7 +50,7 @@ class Centro:
         return [(x[1]) for x in self._distancia_centro_ao_cliente if label_cliente in x]
 
     #Define a distância do cliente para todos os demais da sua região
-    def set_distancia_centro_cliente(self):
+    def set_distancia_centro_todos_cliente(self):
         linha = []
         #Para cada cliente na sua lista de clientes, calcula a distância entre os pontos
         for cliente in self._clientes:
