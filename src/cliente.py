@@ -26,7 +26,7 @@ class Cliente:
 
         # Variaveis referente aos objetos
         self._label = label
-        self._distancia_vertices = list()#[None] * qtd_vizinhos  #Inicialmente a distancia para cada vertice é desconhecida
+        self._distancia_vertices = list()
     
     def __str__(self):
         return "Cliente: " + str(self._label) + "\t Centro de Atendimento: " + str(self._centro) + "\t Volume Pedido: " + str(self._volume_total) + "\t Qtd Pacotes: " + str(self._qtd_pacotes_total)
@@ -107,12 +107,13 @@ class Cliente:
             linha = [vizinho.get_label(), self.euclidian_distance(self._coordenadas, vizinho.get_coordenadas())]
             #Cada "linha" em uma posição do atributo para facilitar a busca
             self._distancia_vertices.append(linha)
-    
 
     def euclidian_distance(self, coordenadas_do_vertice, coordenadas_do_vizinho):
+
         x1 = float(coordenadas_do_vertice[0])
         y1 = float(coordenadas_do_vertice[1])
         x2 = float(coordenadas_do_vizinho[0])
         y2 = float(coordenadas_do_vizinho[1])
+        
         return math.sqrt((x2-x1)**2+(y2-y1)**2)
 

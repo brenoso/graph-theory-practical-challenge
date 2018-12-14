@@ -20,18 +20,15 @@
 
 # In[1]:
 
-
-with open('C:/Users/Administrador/Desktop/graph-theory-practical-challenge/src/__InstanciaMayron.txt') as file:
-# with open('/home/breno/projetos/graph-theory-practical-challenge/assets/InstanciaTeste.txt') as file:
+# with open('C:/Users/Administrador/Desktop/graph-theory-practical-challenge/src/__InstanciaMayron.txt') as file:
+with open('/home/breno/projetos/graph-theory-practical-challenge/assets/instancias/InstanciaTeste.txt') as file:
     N = int(file.readline())
     R = int(file.readline())
     K = int(file.readline())
     H = int(file.readline())
     centros_distribuicao = [file.readline().split() for i in range(R)]
     clientes = ["".join([file.readline(), "-1"]).split() for i in range(N-R)]
-    vehicles = [file.readline().split(' ') for i in range(K)]
-    
-
+    vehicles = [file.readline().split(' ') for i in range(K)]  
 
 # #### Exibição Inicial
 # 
@@ -40,7 +37,6 @@ with open('C:/Users/Administrador/Desktop/graph-theory-practical-challenge/src/_
 # Isto ajuda a elucidar a distribuição dos clientes para esse problema.
 
 # In[8]:
-
 
 from matplotlib import pyplot as plt
 import random
@@ -58,8 +54,8 @@ plt.xlabel("x")
 plt.ylabel("y")
 
 #show = exibe a plotagem dos pontos no plano cartesiano
-#plt.show()
 
+#plt.show()
 
 # # Fase 1
 # 
@@ -67,7 +63,6 @@ plt.ylabel("y")
 # Para cada `cliente (vértice)` calcule o `centro de distribuição` mais próximo.
 
 # In[3]:
-
 
 import sys
 import math
@@ -99,8 +94,8 @@ for p in clientes:
 plt.axis('equal')
 plt.xlabel("x")
 plt.ylabel("y")
-#plt.show()
 
+#plt.show()
 
 # ## Segunda Abordagem
 # 
@@ -109,7 +104,6 @@ plt.ylabel("y")
 # Mais informações, leia: https://pt.wikipedia.org/wiki/Diagrama_de_Voronoy
 
 # In[4]:
-
 
 from scipy.spatial import Voronoi, voronoi_plot_2d
 from shapely.geometry import Point
@@ -143,7 +137,6 @@ polygon = Polygon([vor.vertices[i] for i in vor.regions[5] if not i == '-1'])
 # ## Transformação para regiões finitas
 
 # In[5]:
-
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -271,7 +264,6 @@ plt.ylim(vor.min_bound[1] - 20.1, vor.max_bound[1] + 40.1)
 
 #plt.show()
 
-
 # ## Heurística para melhoramento das divisões das regiões
 # 
 # A ideia utilizada:
@@ -292,7 +284,6 @@ plt.ylim(vor.min_bound[1] - 20.1, vor.max_bound[1] + 40.1)
 # ## Clientes
 
 # In[6]:
-
 
 from cliente import Cliente
 
@@ -329,14 +320,11 @@ for idx in range(0, 4):
         if cliente.get_centro() == idx:
             cliente.set_distancia_para_vizinhos(clientes_de_cada_centro[idx])
 
-
 [print(cliente) for cliente in lista_de_clientes]
-
 
 # ## Centros
 
 # In[7]:
-
 
 from centro import Centro
 
@@ -521,4 +509,4 @@ veiculos_sem_alocacao = [veiculo for veiculo in lista_de_veiculos if veiculo.get
 TODO - Efetua a alocação dos veiculos nos objetos Centro
 '''
 
-
+veiculos_sem_alocacao
