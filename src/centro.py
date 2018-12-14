@@ -52,3 +52,9 @@ class Centro:
     
     def get_volume_total(self):
         return self._volume_total
+
+    def get_valor_total_todos_clientes(self):
+        return self._valor_total_todos_clientes
+
+    def get_label(self):
+        return self._label

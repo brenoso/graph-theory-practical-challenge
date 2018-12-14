@@ -21,8 +21,8 @@
 # In[1]:
 
 
-#with open('C:/Users/Breno/Desktop/graph-theory-practical-challenge/assets/InstanciaTeste.txt') as file:
-with open('/home/breno/projetos/graph-theory-practical-challenge/assets/InstanciaTeste.txt') as file:
+with open('C:/Users/Breno/Desktop/graph-theory-practical-challenge/assets/InstanciaTeste.txt') as file:
+#with open('/home/breno/projetos/graph-theory-practical-challenge/assets/InstanciaTeste.txt') as file:
     N = int(file.readline())
     R = int(file.readline())
     K = int(file.readline())
@@ -470,5 +470,33 @@ for tipo_veiculo in range(len(tipos)):
 '''
 Efetua a alocação dos veiculos 'sobressalentes' para cada centro.
 '''
+# Pega os veiculos que não estão em nenhum centro
+veiculos_sem_alocacao = [veiculo for veiculo in lista_de_veiculos if veiculo.get_centro() is None]
 
-lista_de_veiculos
+# Agrupa os veiculos que não estão em nenhum centro por Tipo
+veiculos_sem_alocacao_por_tipo = []
+for idx in range(len(tipos)):
+    veiculos_sem_alocacao_por_tipo.append([veiculo for veiculo in veiculos_sem_alocacao if veiculo.get_tipo_de_veiculo() == tipos.get(idx)])
+
+# Elimina os tipos de veiculos que não contem veiculos sem centro, caso haja
+veiculos_sem_alocacao_por_tipo = [x for x in veiculos_sem_alocacao_por_tipo if len(x) is not 0]
+
+# Ordena a lista de centros baseado em dois valores: valor_total_todos_clientes e volume_total. Assim poderemos
+# distribuir os veiculos sobressalentes de forma otimizada entre os centros com demanda maior
+lista_de_centros_ordenadas = sorted(lista_de_centros, key = lambda x: (x.get_valor_total_todos_clientes(), x.get_volume_total()), reverse=True)
+
+# Aloca os veiculos 'sobressalentes' para os centros em ordem decrescente de demanda. Ou seja,
+# para cada tipo de veiculo teremos no máximo 4 (menor numero não divisivel pelo numero de centros) veiculos sobressalentes,
+# então, para cada tipo de veiculo, o centro com maior demanda receberá um veiculo, seguido pelo 
+# segundo centro de maior demanda, até esgotarem os veiculos para cada tipo, que serão no máx 4, visto que são 5
+# centros no total.
+for i in range(len(veiculos_sem_alocacao_por_tipo)):
+    for j in range(len(veiculos_sem_alocacao_por_tipo[i])):
+        veiculos_sem_alocacao_por_tipo[i][j].set_alocacao(lista_de_centros_ordenadas[j].get_label())
+
+# Verifica se algum veiculo não foi alocado para algum centro
+veiculos_sem_alocacao = [veiculo for veiculo in lista_de_veiculos if veiculo.get_centro() is None]
+
+'''
+TODO - Efetua a alocação dos veiculos nos objetos Centro
+'''
