@@ -8,7 +8,7 @@ class Cliente:
     '''
     Construtor da classe
     '''
-    def __init__(self, coordenadas, volume, preco_mercadoria, qtd_pacotes, centro, label, qtd_vizinhos):
+    def __init__(self, coordenadas, volume, preco_mercadoria, qtd_pacotes, centro, label):
 
         # Variaveis referentes as mercadorias
         self._volume_total = volume
