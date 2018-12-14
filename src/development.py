@@ -297,9 +297,9 @@ for idx, point in enumerate(clientes):
     preco_mercadoria = float(point[3])
     qtd_pacotes = float(point[4])
     regiao = point[5]
-    qtd_vizinhos = 0#len(clientes)
+
     #Criada lista de Objetos do Tipo CLIENTE
-    lista_de_clientes.append(Cliente(coordernadas, volume, preco_mercadoria, qtd_pacotes, regiao, idx, qtd_vizinhos))
+    lista_de_clientes.append(Cliente(coordernadas, volume, preco_mercadoria, qtd_pacotes, regiao, idx))
 
 #Feita uma conferência dentre todos os clientes quais estão em quais regiões.
 #O somatório é salvo dentro de uma lista que vai de 0 a 4 (qtd de centros)
@@ -343,6 +343,7 @@ for idx, center in enumerate(centros_distribuicao):
     lista_de_centros.append(Centro(coordenadas, clientes_do_centro, label))
     
 [print(centro) for centro in lista_de_centros]
+
 
 # ## Veiculos
 
