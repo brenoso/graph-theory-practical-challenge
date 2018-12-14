@@ -16,7 +16,7 @@ class Centro:
 
         # Inicialmente sem nenhum veiculo, depois será feita uma heurística a partir da demanda de cada
         # centro e sera efetuada a distribuicao mais precisa possivel dos veiculos para cada centro
-        self._veiculos = None
+        self._veiculos = list()
     
     def __str__(self):
         return "Centro: " + str(self._label) + "\t Qtd de Cliente: " + str(self._qtd_clientes) + "\t Volume Total: " + str(self._volume_total) 
@@ -33,8 +33,8 @@ class Centro:
         
         return somatorio_valor_total_clientes
 
-    def adicionar_veiculos(self, veiculos):
-        self._veiculos = veiculos
+    def set_veiculo(self, veiculo):
+        self._veiculos.append(veiculo)
 
     '''
     Getters e Setters

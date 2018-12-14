@@ -20,8 +20,8 @@
 
 # In[1]:
 
-# with open('C:/Users/Administrador/Desktop/graph-theory-practical-challenge/src/__InstanciaMayron.txt') as file:
-with open('/home/breno/projetos/graph-theory-practical-challenge/assets/instancias/InstanciaTeste.txt') as file:
+with open('C:/Users/Breno/Desktop/graph-theory-practical-challenge/src/__InstanciaMayron.txt') as file:
+#with open('/home/breno/projetos/graph-theory-practical-challenge/assets/instancias/InstanciaTeste.txt') as file:
     N = int(file.readline())
     R = int(file.readline())
     K = int(file.readline())
@@ -506,7 +506,10 @@ for i in range(len(veiculos_sem_alocacao_por_tipo)):
 veiculos_sem_alocacao = [veiculo for veiculo in lista_de_veiculos if veiculo.get_centro() is None]
 
 '''
-TODO - Efetua a alocação dos veiculos nos objetos Centro
+Efetua a alocação dos veiculos nos objetos Centro
 '''
 
-veiculos_sem_alocacao
+for veiculo in lista_de_veiculos:
+    label_centro = veiculo.get_centro()
+    centro = [centro for centro in lista_de_centros if centro.get_label() == label_centro]
+    centro[0].set_veiculo(veiculo)
