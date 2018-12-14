@@ -21,8 +21,8 @@
 # In[1]:
 
 
-with open('C:/Users/Breno/Desktop/graph-theory-practical-challenge/assets/InstanciaTeste.txt') as file:
-#with open('/home/breno/projetos/graph-theory-practical-challenge/assets/InstanciaTeste.txt') as file:
+with open('C:/Users/Administrador/Desktop/graph-theory-practical-challenge/src/__InstanciaMayron.txt') as file:
+# with open('/home/breno/projetos/graph-theory-practical-challenge/assets/InstanciaTeste.txt') as file:
     N = int(file.readline())
     R = int(file.readline())
     K = int(file.readline())
@@ -306,9 +306,29 @@ for idx, point in enumerate(clientes):
     preco_mercadoria = float(point[3])
     qtd_pacotes = float(point[4])
     regiao = point[5]
-    qtd_vizinhos = len(clientes)
+    qtd_vizinhos = 0#len(clientes)
     #Criada lista de Objetos do Tipo CLIENTE
     lista_de_clientes.append(Cliente(coordernadas, volume, preco_mercadoria, qtd_pacotes, regiao, idx, qtd_vizinhos))
+
+#Feita uma conferência dentre todos os clientes quais estão em quais regiões.
+#O somatório é salvo dentro de uma lista que vai de 0 a 4 (qtd de centros)
+clientes_de_cada_centro = list()
+for idx in range(0, 4):
+    x=0
+    clientes_do_centro = []
+    for cliente in lista_de_clientes:
+        if cliente.get_centro() == idx:
+            clientes_do_centro.append(cliente)
+            x+=1
+    clientes_de_cada_centro.append(clientes_do_centro)
+
+#Verifica qual cliente pertence a qual centro, após isso é inserida a lista criada acima com os todos os vertices do centro
+#A partir dessa informação é calculada a distancia de cada cliente para todos os demais, gerando assim a informação de um "grafo completo", no qual as arestas são as distâncias encontradas
+for idx in range(0, 4):
+    for cliente in lista_de_clientes:
+        if cliente.get_centro() == idx:
+            cliente.set_distancia_para_vizinhos(clientes_de_cada_centro[idx])
+
 
 [print(cliente) for cliente in lista_de_clientes]
 
@@ -500,3 +520,5 @@ veiculos_sem_alocacao = [veiculo for veiculo in lista_de_veiculos if veiculo.get
 '''
 TODO - Efetua a alocação dos veiculos nos objetos Centro
 '''
+
+

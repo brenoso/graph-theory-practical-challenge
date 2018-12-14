@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+import math
 '''
 Classe que representa um vértice do grafo (cliente)
 '''
@@ -26,7 +26,7 @@ class Cliente:
 
         # Variaveis referente aos objetos
         self._label = label
-        self._distancia_vertices = [None] * qtd_vizinhos  #Inicialmente a distancia para cada vertice é desconhecida
+        self._distancia_vertices = list()#[None] * qtd_vizinhos  #Inicialmente a distancia para cada vertice é desconhecida
     
     def __str__(self):
         return "Cliente: " + str(self._label) + "\t Centro de Atendimento: " + str(self._centro) + "\t Volume Pedido: " + str(self._volume_total) + "\t Qtd Pacotes: " + str(self._qtd_pacotes_total)
@@ -97,4 +97,22 @@ class Cliente:
 
     def set_sendo_visitado(self):
         self._sendo_visitado = True
+
+    #Define a distância do cliente para todos os demais da sua região
+    def set_distancia_para_vizinhos(self, lista_de_vizinhos):
+        linha = []
+        #Para cada vizinho da sua lista de vizinhos da região
+        for vizinho in lista_de_vizinhos:
+            #Cria uma "linha" na matriz 2D, no qual a posição 0 trata-se do ID do vizinho e a posição da distância para esse vizinho
+            linha = [vizinho.get_label(), self.euclidian_distance(self._coordenadas, vizinho.get_coordenadas())]
+            #Cada "linha" em uma posição do atributo para facilitar a busca
+            self._distancia_vertices.append(linha)
+    
+
+    def euclidian_distance(self, coordenadas_do_vertice, coordenadas_do_vizinho):
+        x1 = float(coordenadas_do_vertice[0])
+        y1 = float(coordenadas_do_vertice[1])
+        x2 = float(coordenadas_do_vizinho[0])
+        y2 = float(coordenadas_do_vizinho[1])
+        return math.sqrt((x2-x1)**2+(y2-y1)**2)
 
