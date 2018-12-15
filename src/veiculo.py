@@ -88,3 +88,19 @@ class Veiculo:
     
     def get_tipo_de_veiculo(self):
         return self._tipo_de_veiculo
+
+    def get_volume_em_carregamento(self):
+        return self._volume_carregado
+
+    def converte_segundos_em_tempo(self):
+        horas = self._tempo_jornada_disponivel // 3600
+
+        segs_restantes = self._tempo_jornada_disponivel % 3600
+        minutos = segs_restantes // 60
+        segs_restantes_final = segs_restantes % 60
+
+        if (horas >= 24): 
+            horas = int(horas % 24)
+                
+        resultado = str(horas) + ":" + str(minutos) + ":" + str(segs_restantes_final)
+        return resultado

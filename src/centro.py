@@ -1,6 +1,7 @@
 from cliente import Cliente
 from veiculo import Veiculo
 import math
+
 class Centro:
     '''
     Construtor da classe
@@ -78,3 +79,10 @@ class Centro:
         x2 = float(coordenadas_do_vizinho[0])
         y2 = float(coordenadas_do_vizinho[1])
         return math.sqrt((x2-x1)**2+(y2-y1)**2)
+
+    def imprime_veiculos_alocados(self):
+        resultado = "Centro " + str(self._label) + ". Total de Veículos: " + str(len(self._veiculos)) + "\n"
+        for veiculo in self._veiculos:
+            resultado = resultado + "\tVeículo: " + str(veiculo.get_tipo_de_veiculo()) + "\t\tJornada Disponível: " + str(veiculo.converte_segundos_em_tempo()) + "\tVolume em Carga: " + str(veiculo.get_volume_em_carregamento()) + "\n"
+        resultado = resultado + "\n\n"
+        return resultado
