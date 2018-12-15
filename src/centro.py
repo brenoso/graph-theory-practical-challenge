@@ -1,6 +1,7 @@
 from cliente import Cliente
 from veiculo import Veiculo
 import math
+from prettytable import PrettyTable
 
 class Centro:
     '''
@@ -81,8 +82,13 @@ class Centro:
         return math.sqrt((x2-x1)**2+(y2-y1)**2)
 
     def imprime_veiculos_alocados(self):
-        resultado = "Centro " + str(self._label) + ". Total de Veículos: " + str(len(self._veiculos)) + "\n"
+        tabela = PrettyTable()
+        tabela.title = "Centro " + str(self._label)
+        tabela.field_names = ['Tipo', 'Jornada Disponível', 'Volume em Carga', 'Custo Dia', 'Custo Km', 'Custo Hora']
+        
         for veiculo in self._veiculos:
-            resultado = resultado + "\tVeículo: " + str(veiculo.get_tipo_de_veiculo()) + "\t\tJornada Disponível: " + str(veiculo.converte_segundos_em_tempo()) + "\tVolume em Carga: " + str(veiculo.get_volume_em_carregamento()) + "\n"
-        resultado = resultado + "\n\n"
-        return resultado
+            tabela.add_row([veiculo.get_tipo_de_veiculo(), veiculo.converte_segundos_em_tempo(), veiculo.get_volume_em_carregamento(), veiculo.get_custo_por_dia(), veiculo.get_custo_por_km(), veiculo.get_custo_por_hora()])
+        
+        tabela.sortby = "Custo Dia"
+
+        return tabela
