@@ -92,6 +92,15 @@ class Veiculo:
     def get_volume_em_carregamento(self):
         return self._volume_carregado
 
+    def get_custo_por_dia(self):
+        return self._custo_fixo_diario
+
+    def get_custo_por_km(self):
+        return self._custo_medio_km
+
+    def get_custo_por_hora(self):
+        return self._custo_medio_hora
+
     def converte_segundos_em_tempo(self):
         horas = self._tempo_jornada_disponivel // 3600
 
@@ -102,5 +111,5 @@ class Veiculo:
         if (horas >= 24): 
             horas = int(horas % 24)
                 
-        resultado = str(horas) + ":" + str(minutos) + ":" + str(segs_restantes_final)
+        resultado = str(horas) + "h " + str(minutos) + "m " + str(segs_restantes_final)+ "s"
         return resultado
