@@ -20,7 +20,7 @@
 
 # In[1]:
 
-with open('C:/Users/Guilherme/Desktop/graph-theory-practical-challenge/src/__InstanciaMayron.txt') as file:
+with open('C:/Users/Breno/Desktop/graph-theory-practical-challenge/src/__InstanciaMayron.txt') as file:
 #with open('/home/breno/projetos/graph-theory-practical-challenge/assets/instancias/InstanciaTeste.txt') as file:
     N = int(file.readline())
     R = int(file.readline())
@@ -517,3 +517,11 @@ for veiculo in lista_de_veiculos:
 
 for centro in lista_de_centros:
     print(centro.imprime_veiculos_alocados())
+
+
+# ## Inicío do transporte - Elaboração das rotas
+# In[10]:
+
+lista_de_centros
+lista_de_veiculos
+lista_de_clientes

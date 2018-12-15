@@ -28,9 +28,17 @@ class Veiculo:
         self._disponivel_para_trajeto = False # Após ser alocado para um centro, ficará disponível para entregas
         self._tempo_jornada_disponivel = 25200 # -> 7horas em segundos
         self._tipo_de_veiculo = tipo_veiculo
+        self.localizacao_atual = None
+        self.trajeto_feito = list()
     
     def __str__(self):
         return "Veículo: " + self._tipo_de_veiculo + "\n\tCusto dia: " + str(self._custo_fixo_diario) + "\tCusto km: " + str(self._custo_medio_km) + "\tCusto hora: " + str(self._custo_medio_hora) + "\n\tVol. Máximo: " + str(self._volume_maximo_suportado) + "\tValor. Máximo: " + str(self._valor_maximo_suportado) + "\n\tVel. Ini/Fin: " + str(self._velocidade_inicial_final) + "\tVel. Normal: " + str(self._velocidade_normal)
+
+    # TODO
+    # Se o tempo de jornada for menor que o tempo de carregamento + o tempo de de trajeto até o cliente
+    # setar o disponivel_para_trajeto como False.
+    def is_trajeto_possivel(self, cliente):
+        return True
 
     '''
     Debita tempo da jornada, para que o veículo não trabalhe mais que 7 horas
@@ -44,6 +52,10 @@ class Veiculo:
     '''
     def inicia_trajeto(self):
         return False
+    
+    def atualizar_localizacao_atual(self, local):
+        self.localizacao_atual = local
+        self.trajeto_feito.append(local)
 
     '''
     Métodos getters e setters
@@ -56,9 +68,15 @@ class Veiculo:
             self._centro_de_alocacao = centro
             self._disponivel_para_alocacao = False
             self._disponivel_para_trajeto = True
+
+            # TODO Passar o OBJETO do centro ao inves do label!!!!
+            self.atualizar_localizacao_atual(centro)
         else:
             print("Erro ao alocar! Veiculo ja alocado!")
         
+    def get_localizacao_atual(self):
+        return self.localizacao_atual
+
     def get_volume_maximo_suportado(self):
         return self._volume_maximo_suportado
 

@@ -1,0 +1,56 @@
+P/ cada centro:
+
+    ordena os veiculos em ordem de menor 'custo' (considerar inicialmente custo/hora ou lambda com custo/hr e custo/dia)
+
+    P/ cada veiculo (Pega o veiculo disponivel de 'menor custo' na lista ordenada):
+
+        while(veiculo._disponivel_para_trajeto())  - Ou seja, ele poderá fazer outro trajeto qnd o anterior terminar
+
+            Pega o local atual do veiculo (que será ou um cliente ou o centro dele) e cria uma lista com os outros clientes disponiveis (que tiverem demanda)
+            ordenados pela distancia do local atual do veiculo (centro ou cliente) - TSP
+
+            FOR pra cada cliente_ordenados_por_distancia:
+
+                - Criar uma função (is_trajeto_possivel) no veículo que verifica se ele pode fazer o trajeto de ida e volta (até o centro) até
+                esse cliente DO PONTO EM QUE O VEICULO ESTÁ levando em conta todas as variáveis necessarias (tempo de jornada restante, 
+                tempo de carga, tempo de descarga, tempo gasto do centro até o cliente (ida e volta) levando em conta a 
+                distancia/velocidade inicial_final se ele estiver no centro, ou velocidade_normal se ele estiver em algum cliente).
+                
+                - Se essa função retornar True:
+
+                    veiculo.atualizar_localizacao_atual(cliente) - Setar o cliente escolhido como novo local do veiculo
+                
+                    - Efetuar os debitos necessários tanto no cliente como no veiculo (Fazer esse levantamento, pois serão
+                    bastante coisas). Os debitos no veiculo serão apenas referentes a ida dele ao cliente, não da volta pro centro.
+
+                    if (tempo_esgotou): // Se o tempo restante do veiculo - o tempo da volta pro centro estiver dentro de uma determinada margem
+                        
+                        _disponivel_para_trajeto = False
+
+                        Realizar debitos do caminho de volta do veiculo para o centro
+
+                        veiculo.atualizar_localizacao_atual(centro) - Setar o centro como novo local do veiculo
+
+                    // Função complexa que em tese verificaria para todos os possiveis vizinhos do cliente em que o veiculo está
+                    // se com o volume restante do veiculo é possivel efetuar algum entrega pra algum desses vizinhos.
+                    if (veiculo._volume_carregado == 0) // Se o volume do veiculo esgotou ele precisa voltar para o centro, para depois voltar a efetuar novos trajetos
+
+                        Realizar debitos do caminho de volta do veiculo para o centro
+
+                        veiculo.atualizar_localizacao_atual(centro) - Setar o centro como novo local do veiculo
+
+                    break pra sair do FOR dos clientes
+
+                - Se essa função retornar False:
+
+                    if(idx == len(cliente_ordenados_por_distancia))
+                        _disponivel_para_trajeto = False
+                        Realizar debitos do caminho de volta do veiculo para o centro
+                        veiculo.atualizar_localizacao_atual(centro) - Setar o centro como novo local do veiculo
+
+
+
+Notas:
+
+A ideia é 'traçar' a rota completa de um veiculo até esgotar todo seu tempo ou limite de carga e depois voltar para o centro, e repetir o processo caso haja tempo disponivel
+se o limite de tempo foi atingido, partir pro proximo veiculo que vai iniciar já olhando os clientes e as demandas 'restantes' depois das rotas completas do veiculo anterior.
