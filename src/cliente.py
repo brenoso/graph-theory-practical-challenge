@@ -41,6 +41,9 @@ class Cliente:
     def receber_volume(self, volume_recebido):
 
         volume_disponivel = self.get_volume_total()
+        volume_disponivel = round(volume_disponivel, 8)
+
+        volume_recebido = round(volume_recebido, 8)
 
         if (volume_recebido <= volume_disponivel):
             self._volume_total = self._volume_total - volume_recebido
@@ -68,6 +71,12 @@ class Cliente:
         d['volumes_por_pacote'] = self._volumes_por_pacote
 
         return d
+
+    def get_distancias_vizinhos(self):
+        return self._distancia_vertices
+    
+    def get_volumes_por_pacote(self):
+        return self._volumes_por_pacote
 
     def get_volume_total(self):
         return self._volume_total
