@@ -12,9 +12,9 @@ class Cliente:
     def __init__(self, coordenadas, volume, preco_mercadoria, qtd_pacotes, centro, label):
 
         # Variaveis referentes as mercadorias
-        self._volume_total = round(volume, 8)
+        self._volume_total = round(volume, 6)
         self._preco_mercadoria_total = preco_mercadoria
-        self._qtd_pacotes_total = round(qtd_pacotes, 8)
+        self._qtd_pacotes_total = round(qtd_pacotes, 6)
 
         self._volumes_por_pacote = self._volume_total / self._qtd_pacotes_total
         self._preco_mercadoria_por_pacote = self._preco_mercadoria_total / self._qtd_pacotes_total
@@ -41,16 +41,16 @@ class Cliente:
     '''
     def receber_volume(self, volume_recebido):
 
-        volume_disponivel = round(self.get_volume_total(), 8)
-        volume_disponivel = round(volume_disponivel, 8)
+        volume_disponivel = round(self.get_volume_total(), 6)
+        volume_disponivel = round(volume_disponivel, 6)
 
-        volume_recebido = round(volume_recebido, 8)
+        volume_recebido = round(volume_recebido, 6)
 
         if (volume_recebido <= volume_disponivel):
-            self._volume_total = round(self._volume_total, 8)
+            self._volume_total = round(self._volume_total,6)
             self._volume_total = self._volume_total - volume_recebido
 
-            self._qtd_pacotes_total = round(self._qtd_pacotes_total, 8)
+            self._qtd_pacotes_total = round(self._qtd_pacotes_total, 6)
             self._qtd_pacotes_total = self._qtd_pacotes_total - (volume_recebido / self._volumes_por_pacote)
         else:
             print("O volume recebido ultrapassa o volume restante do cliente!")

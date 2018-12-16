@@ -23,7 +23,7 @@ import random
 
 
 
-codigo = random.randint(1,6)
+codigo = random.randint(1,1)
 arquivo = "C:/Users/Guilherme/Desktop/graph-theory-practical-challenge/src/instancias/__" + str(codigo) + ".txt"
 
 with open(arquivo) as file:
@@ -301,7 +301,7 @@ for idx, point in enumerate(clientes):
     coordernadas.append(point[0])
     coordernadas.append(point[1])
     volume = float(point[2])
-    volume = round(volume, 8)
+    volume = round(volume, 6)
     preco_mercadoria = float(point[3])
     qtd_pacotes = float(point[4])
     regiao = point[5]
@@ -364,7 +364,7 @@ lista_de_veiculos = []
 for idx, veiculo in enumerate(vehicles):
 
     volume_maximo_suportado = float(veiculo[0])
-    volume_maximo_suportado = round(volume_maximo_suportado, 8)
+    volume_maximo_suportado = round(volume_maximo_suportado, 6)
     valor_maximo_suportado = float(veiculo[1])
     velocidade_inicial_final = float(veiculo[3])
     velocidade_normal = float(veiculo[4])
@@ -567,8 +567,6 @@ for centro in lista_de_centros:
                         # Veiculo que tem o tempo esgado, volta para o centro!
                         if (veiculo.is_tempo_esgotado(centro)):
 
-                            historico = [veiculo.get_localizacao_atual(), veiculo._valor_maximo_suportado,
-                                            veiculo._volume_maximo_suportado, veiculo._tempo_jornada_disponivel]
                             # Que Deus abençoe esse código
                             # Realizar debitos do caminho de volta do veiculo para o centro
                             distancia_cliente_centro = centro.get_distancia_centro_ao_cliente(veiculo.get_localizacao_atual().get_label())
@@ -577,13 +575,6 @@ for centro in lista_de_centros:
 
                             veiculo.atualizar_localizacao_atual(centro)
                             veiculo._disponivel_para_trajeto = False
-
-                            historico.append(veiculo.get_localizacao_atual())
-                            historico.append(veiculo._valor_maximo_suportado)
-                            historico.append(veiculo._volume_maximo_suportado)
-                            historico.append(veiculo._tempo_jornada_disponivel)
-                            
-                            veiculo.historico_trajetos.append(historico)
 
                         break
                     
@@ -596,27 +587,20 @@ for centro in lista_de_centros:
                         # Realizar debitos do caminho de volta do veiculo para o centro
                         if (veiculo.get_localizacao_atual() is not centro):
 
-                            historico = [veiculo.get_localizacao_atual(), veiculo._valor_maximo_suportado,
-                                            veiculo._volume_maximo_suportado, veiculo._tempo_jornada_disponivel]
-
                             distancia_cliente_centro = centro.get_distancia_centro_ao_cliente(veiculo.get_localizacao_atual().get_label())
+                            
                             tempo_retorno_centro = (distancia_cliente_centro[0] / veiculo._velocidade_inicial_final) * 120
-                            veiculo.debita_tempo_jornada(veiculo.get_tempo_jornada_disponivel() - tempo_retorno_centro)
+                            
+                            veiculo.debita_tempo_jornada(veiculo.get_tempo_jornada_disponivel() - round(tempo_retorno_centro, 0))
                             veiculo.atualizar_localizacao_atual(centro)
                             veiculo.reset_volume_maximo_suportado()
                             veiculo.reset_valor_maximo_suportado()
 
-                            historico.append(veiculo.get_localizacao_atual())
-                            historico.append(veiculo._valor_maximo_suportado)
-                            historico.append(veiculo._volume_maximo_suportado)
-                            historico.append(veiculo._tempo_jornada_disponivel)
-                            
-                            veiculo.historico_trajetos.append(historico)
-
                         else:
                             veiculo._disponivel_para_trajeto = False
 
-            else: 
+            else:
+                veiculo._disponivel_para_trajeto = False
                 break         
 
 from prettytable import PrettyTable
@@ -630,6 +614,21 @@ for cliente in lista_de_clientes:
     tabela_clientes.add_row([cliente.get_label(), coordenadas[0], coordenadas[0], cliente.get_volume_total()])
 print(tabela_clientes)
 
+
+from prettytable import PrettyTable
+
+tabela_veiculos = PrettyTable()
+
+tabela_veiculos.field_names = ['Label', 'Tipo', 'Volume']
+
+for idx,veiculo in enumerate(lista_de_veiculos, ):
+    tabela_veiculos.title = "Trajetos - Veíc. " + str(idx) + " - Tp: " + veiculo.get_tipo_de_veiculo() + " Jor.: " + veiculo.converte_segundos_em_tempo()
+    for idxt,trajeto in enumerate(veiculo.get_trajeto_feito()):
+        tabela_veiculos.add_row([trajeto.get_label(), str(type(trajeto)), trajeto.get_volume_total()])
+        #tabela_veiculos.sortby = "idx"
+
+    print(tabela_veiculos)
+    tabela_veiculos.clear_rows()
 
 lista_de_centros
 lista_de_veiculos

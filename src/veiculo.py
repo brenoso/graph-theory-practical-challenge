@@ -37,7 +37,6 @@ class Veiculo:
         self._tipo_de_veiculo = tipo_veiculo
         self.localizacao_atual = None
         self.trajeto_feito = list()
-        self.historico_trajetos = list()
     
     # Sobrecarga da impressão do objeto
     def __str__(self):
@@ -129,25 +128,12 @@ class Veiculo:
         # Debita valores da entrega no cliente e no veiculo.
         if (check_tempo and check_valor and check_volume):
 
-            historico = [self.get_localizacao_atual(), self._valor_maximo_suportado,
-                           self._volume_maximo_suportado, self._tempo_jornada_disponivel]
-
             self._valor_maximo_suportado -= (quantidade_pacotes_para_entrega * cliente.get_preco_mercadoria_pacote())
             self._volume_maximo_suportado -= (quantidade_pacotes_para_entrega * cliente.get_volumes_por_pacote())
             self._tempo_jornada_disponivel -= tempo_total_viagem
 
             cliente.receber_volume((quantidade_pacotes_para_entrega * cliente.get_volumes_por_pacote()))
             self.atualizar_localizacao_atual(cliente)
-
-            historico = [self.get_localizacao_atual(), self._valor_maximo_suportado,
-                self._volume_maximo_suportado, self._tempo_jornada_disponivel]
-
-            historico.append(self.get_localizacao_atual())
-            historico.append(self._valor_maximo_suportado)
-            historico.append(self._volume_maximo_suportado)
-            historico.append(self._tempo_jornada_disponivel)
-            
-            self.historico_trajetos.append(historico)
 
             return True
 
@@ -198,7 +184,7 @@ class Veiculo:
 
         if (horas >= 24): 
             horas = int(horas % 24)
-
+        
         return (str(horas) + "h " + str(minutos) + "m " + str(segs_restantes_final)+ "s")
     
     #TODO - Globalizar essa função
