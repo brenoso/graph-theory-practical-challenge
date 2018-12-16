@@ -263,6 +263,9 @@ class Veiculo:
     def get_valor_maximo_suportado_inicial(self):
         return self._valor_maximo_suportado_inicial
 
+    def get_trajeto_feito(self):
+        return self.trajeto_feito
+
     # Define para qual centro (região) o veículo será alocado
     def set_alocacao(self, centro):
 

@@ -598,6 +598,17 @@ for centro in lista_de_centros:
             else: 
                 break         
 
+from prettytable import PrettyTable
+
+tabela_clientes = PrettyTable()
+tabela_clientes.title = "Clientes"
+tabela_clientes.field_names = ['Cliente', 'Coordenada X', 'Coordenada Y', 'Volume']
+
+for cliente in lista_de_clientes:
+    coordenadas = cliente.get_coordenadas()
+    tabela_clientes.add_row([cliente.get_label(), coordenadas[0], coordenadas[0], cliente.get_volume_total()])
+print(tabela_clientes)
+
 
 lista_de_centros
 lista_de_veiculos

@@ -67,6 +67,19 @@ class Cliente:
         y2 = float(coordenadas_do_vizinho[1])
         
         return math.sqrt((x2-x1)**2+(y2-y1)**2)
+    '''
+    def imprime_atendimento_realizado(self):
+        tabela = PrettyTable()
+        tabela.title = "Centro " + str(get_centro)
+        tabela.field_names = ['Cliente', 'Coordenada X', 'Coordenada Y', 'Volume']
+        
+        for veiculo in self._veiculos:
+            tabela.add_row([veiculo.get_tipo_de_veiculo(), veiculo.converte_segundos_em_tempo(), veiculo.get_volume_em_carregamento(), veiculo.get_custo_por_dia(), veiculo.get_custo_por_km(), veiculo.get_custo_por_hora()])
+        
+        tabela.sortby = "Custo Dia"
+
+        return tabela
+    '''
 
     '''
     Getters e Setters
