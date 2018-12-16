@@ -1,5 +1,6 @@
-# -*- coding: utf-8 -*-
 import math
+
+
 '''
 Classe que representa um vértice do grafo (cliente)
 '''
