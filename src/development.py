@@ -21,7 +21,9 @@
 
 import random
 
-codigo = random.randint(3,3)
+
+
+codigo = random.randint(1,6)
 arquivo = "C:/Users/Guilherme/Desktop/graph-theory-practical-challenge/src/instancias/__" + str(codigo) + ".txt"
 
 with open(arquivo) as file:
