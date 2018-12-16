@@ -44,7 +44,13 @@ class Centro:
     '''
     Getters e Setters
     '''
-    def get_coordenada(self):
+    def get_distancias_vizinhos(self):
+        return self._distancia_centro_ao_cliente
+
+    def get_veiculos(self):
+        return self._veiculos
+
+    def get_coordenadas(self):
         return self._coordenadas
 
     def get_quantidade_clientes(self):

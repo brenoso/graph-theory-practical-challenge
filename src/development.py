@@ -20,7 +20,7 @@
 
 # In[1]:
 
-with open('C:/Users/Guilherme/Desktop/graph-theory-practical-challenge/src/__InstanciaMayron.txt') as file:
+with open('C:/Users/Breno/Desktop/graph-theory-practical-challenge/src/__InstanciaMayron.txt') as file:
 #with open('/home/breno/projetos/graph-theory-practical-challenge/assets/instancias/InstanciaTeste.txt') as file:
     N = int(file.readline())
     R = int(file.readline())
@@ -294,6 +294,7 @@ for idx, point in enumerate(clientes):
     coordernadas.append(point[0])
     coordernadas.append(point[1])
     volume = float(point[2])
+    volume = round(volume, 8)
     preco_mercadoria = float(point[3])
     qtd_pacotes = float(point[4])
     regiao = point[5]
@@ -356,6 +357,7 @@ lista_de_veiculos = []
 for idx, veiculo in enumerate(vehicles):
 
     volume_maximo_suportado = float(veiculo[0])
+    volume_maximo_suportado = round(volume_maximo_suportado, 8)
     valor_maximo_suportado = float(veiculo[1])
     velocidade_inicial_final = float(veiculo[3])
     velocidade_normal = float(veiculo[4])
@@ -465,7 +467,7 @@ for tipo_veiculo in range(len(tipos)):
     for idx in range(quantidade_veiculos_alocar):
 
         # Aloca o veiculo para o centro
-        lista_veiculos_por_tipo[tipo_veiculo][idx].set_alocacao(label_centro)
+        lista_veiculos_por_tipo[tipo_veiculo][idx].set_alocacao(lista_de_centros[label_centro])
 
         # Essa variavel será decrementada até que chegue a 0, onde
         # então significará que o numero de veiculos por centro alocados já foi atingido
@@ -501,7 +503,7 @@ lista_de_centros_ordenadas = sorted(lista_de_centros, key = lambda x: (x.get_val
 # centros no total.
 for i in range(len(veiculos_sem_alocacao_por_tipo)):
     for j in range(len(veiculos_sem_alocacao_por_tipo[i])):
-        veiculos_sem_alocacao_por_tipo[i][j].set_alocacao(lista_de_centros_ordenadas[j].get_label())
+        veiculos_sem_alocacao_por_tipo[i][j].set_alocacao(lista_de_centros_ordenadas[j])
 
 # Verifica se algum veiculo não foi alocado para algum centro
 veiculos_sem_alocacao = [veiculo for veiculo in lista_de_veiculos if veiculo.get_centro() is None]
@@ -517,3 +519,81 @@ for veiculo in lista_de_veiculos:
 
 for centro in lista_de_centros:
     print(centro.imprime_veiculos_alocados())
+
+
+# ## Inicío do transporte - Elaboração das rotas
+# In[10]:
+
+for centro in lista_de_centros:
+
+    veiculos = centro.get_veiculos()
+    veiculos_ordenados = sorted(veiculos, key = lambda x: (x.get_custo_por_hora(), x.get_custo_por_dia()), reverse=True)
+    
+    for veiculo in veiculos_ordenados:
+
+        while (veiculo.is_disponivel_para_trajeto()):
+            local_atual = veiculo.get_localizacao_atual() 
+
+            ### INICIO TSP ###
+            vizinhos = local_atual.get_distancias_vizinhos()
+
+            # Filtra os vizinhos para que não apareça a distancia do vertice para ele mesmo,
+            # pois essa será sempre 0
+            vizinhos = [x for x in vizinhos if x[1] > 0]
+
+            posicao_vizinhos_ordenados = sorted(vizinhos, key = lambda x: (x[1]))
+
+            vizinhos_mais_proximos = list()
+            for idx in range(len(posicao_vizinhos_ordenados)):
+                posicao = posicao_vizinhos_ordenados[idx][0]
+                vizinhos_mais_proximos.append(lista_de_clientes[posicao])
+            
+            vizinhos_mais_proximos = [vizinho for vizinho in vizinhos_mais_proximos if vizinho.tem_demanda()]
+            ### FIM TSP ###
+
+            if (vizinhos_mais_proximos):
+
+                for idx, vizinho in enumerate(vizinhos_mais_proximos):
+                    
+                    # Veiculo, de onde vc está, é possível ir até esse vizinho e volta para o centro?
+                    if (veiculo.is_trajeto_possivel(vizinho, centro)):
+
+                        # Veiculo que tem o tempo esgado, volta para o centro!
+                        if (veiculo.is_tempo_esgotado(centro)):
+
+                            # Que Deus abençoe esse código
+                            # Realizar debitos do caminho de volta do veiculo para o centro
+                            distancia_cliente_centro = centro.get_distancia_centro_ao_cliente(veiculo.get_localizacao_atual().get_label())
+                            tempo_retorno_centro = (distancia_cliente_centro[0] / veiculo._velocidade_inicial_final) * 120
+                            veiculo.debita_tempo_jornada(veiculo.get_tempo_jornada_disponivel() - tempo_retorno_centro)
+
+                            veiculo.atualizar_localizacao_atual(centro)
+                            veiculo._disponivel_para_trajeto = False
+
+                        break
+                    
+                    # Não foi encontrado um trajeto que atenda aos três requisitos: volume, valor e tempo
+                    # Porém o veiculo tem tempo disponivel para mais entregas, então ele voltará ao centro,
+                    # reporá seu estoque e iniciará um novo trajeto para os clientes restantes
+                    elif (idx == len(vizinhos_mais_proximos) - 1):
+
+                        # Que Deus abençoe esse código
+                        # Realizar debitos do caminho de volta do veiculo para o centro
+                        if (veiculo.get_localizacao_atual() is not centro):
+                            distancia_cliente_centro = centro.get_distancia_centro_ao_cliente(veiculo.get_localizacao_atual().get_label())
+                            tempo_retorno_centro = (distancia_cliente_centro[0] / veiculo._velocidade_inicial_final) * 120
+                            veiculo.debita_tempo_jornada(veiculo.get_tempo_jornada_disponivel() - tempo_retorno_centro)
+                            veiculo.atualizar_localizacao_atual(centro)
+                            veiculo.reset_volume_maximo_suportado()
+                            veiculo.reset_valor_maximo_suportado()
+
+                        else:
+                            veiculo._disponivel_para_trajeto = False
+
+            else: 
+                break         
+
+
+lista_de_centros
+lista_de_veiculos
+lista_de_clientes
