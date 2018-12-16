@@ -23,7 +23,7 @@
 import random
 
 codigo = random.randint(1,6)
-arquivo = "C:/Users/Breno/Desktop/graph-theory-practical-challenge/src/instancias/__" + str(codigo) + ".txt"
+arquivo = "C:/Users/Guilherme/Desktop/graph-theory-practical-challenge/src/instancias/__" + str(codigo) + ".txt"
 
 with open(arquivo) as file:
 #with open('/home/breno/projetos/graph-theory-practical-challenge/assets/instancias/InstanciaTeste.txt') as file:
