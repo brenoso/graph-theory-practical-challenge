@@ -12,9 +12,9 @@ class Cliente:
     def __init__(self, coordenadas, volume, preco_mercadoria, qtd_pacotes, centro, label):
 
         # Variaveis referentes as mercadorias
-        self._volume_total = volume
+        self._volume_total = round(volume, 8)
         self._preco_mercadoria_total = preco_mercadoria
-        self._qtd_pacotes_total = qtd_pacotes
+        self._qtd_pacotes_total = round(qtd_pacotes, 8)
 
         self._volumes_por_pacote = self._volume_total / self._qtd_pacotes_total
         self._preco_mercadoria_por_pacote = self._preco_mercadoria_total / self._qtd_pacotes_total
@@ -41,7 +41,7 @@ class Cliente:
     '''
     def receber_volume(self, volume_recebido):
 
-        volume_disponivel = self.get_volume_total()
+        volume_disponivel = round(self.get_volume_total(), 8)
         volume_disponivel = round(volume_disponivel, 8)
 
         volume_recebido = round(volume_recebido, 8)
@@ -70,19 +70,6 @@ class Cliente:
         y2 = float(coordenadas_do_vizinho[1])
         
         return math.sqrt((x2-x1)**2+(y2-y1)**2)
-    '''
-    def imprime_atendimento_realizado(self):
-        tabela = PrettyTable()
-        tabela.title = "Centro " + str(get_centro)
-        tabela.field_names = ['Cliente', 'Coordenada X', 'Coordenada Y', 'Volume']
-        
-        for veiculo in self._veiculos:
-            tabela.add_row([veiculo.get_tipo_de_veiculo(), veiculo.converte_segundos_em_tempo(), veiculo.get_volume_em_carregamento(), veiculo.get_custo_por_dia(), veiculo.get_custo_por_km(), veiculo.get_custo_por_hora()])
-        
-        tabela.sortby = "Custo Dia"
-
-        return tabela
-    '''
 
     '''
     Getters e Setters
