@@ -1,3 +1,6 @@
+import math
+import datetime
+
 class Veiculo:
 
     '''
@@ -6,6 +9,10 @@ class Veiculo:
     def __init__(self, volume_maximo_suportado, valor_maximo_suportado, velocidade_inicial_final, velocidade_normal,
                         tempo_carga, tempo_descarga, custo_medio_hora, custo_medio_km, custo_fixo_diario, tipo_veiculo):
 
+        # Variaveis de controle (backups)
+        self._volume_maximo_suportado_inicial = volume_maximo_suportado
+        self._valor_maximo_suportado_inicial = valor_maximo_suportado
+        
         # Variaveis explicitas no arquivo
         self._volume_maximo_suportado = volume_maximo_suportado # volume máximo (em m3) que o veículo pode transportar
         self._valor_maximo_suportado = valor_maximo_suportado # valor máximo (em reais) que o veículo pode transportar
@@ -30,15 +37,120 @@ class Veiculo:
         self._tipo_de_veiculo = tipo_veiculo
         self.localizacao_atual = None
         self.trajeto_feito = list()
+        self.historico_trajetos = list()
     
     def __str__(self):
         return "Veículo: " + self._tipo_de_veiculo + "\n\tCusto dia: " + str(self._custo_fixo_diario) + "\tCusto km: " + str(self._custo_medio_km) + "\tCusto hora: " + str(self._custo_medio_hora) + "\n\tVol. Máximo: " + str(self._volume_maximo_suportado) + "\tValor. Máximo: " + str(self._valor_maximo_suportado) + "\n\tVel. Ini/Fin: " + str(self._velocidade_inicial_final) + "\tVel. Normal: " + str(self._velocidade_normal)
 
-    # TODO
+    # Consideraremos que se restar somente 10% de tempo restante da jornada
+    # disponivel, o veiculo será realocado para o centro
+    def is_tempo_esgotado(self, centro):
+        
+        distancia_cliente_centro = centro.get_distancia_centro_ao_cliente(self.get_localizacao_atual().get_label())
+        
+        tempo_retorno_centro = (distancia_cliente_centro[0] / self._velocidade_inicial_final) * 120
+
+        tempo_restante = self.get_tempo_jornada_disponivel() - tempo_retorno_centro
+
+        if (tempo_restante > (25200 * 0.10)):
+            return False
+
+        return True
+
+    # Deus abençoe esse código
     # Se o tempo de jornada for menor que o tempo de carregamento + o tempo de de trajeto até o cliente
     # setar o disponivel_para_trajeto como False.
-    def is_trajeto_possivel(self, cliente):
-        return True
+    def is_trajeto_possivel(self, cliente, centro):
+
+        check_volume = False
+        check_tempo = False
+        check_valor = False
+
+        '''
+        Calculos referentes a quantidade de pacotes
+        '''
+        quantidade_pacotes_para_entrega = 0
+
+        volume_solicitado_cliente = cliente.get_volume_total()
+        # Verifica se o veiculo é capaz de entregar todo o volume solicitado pelo cliente
+        if ((self.get_volume_maximo_suportado() - volume_solicitado_cliente) > 0):
+            check_volume = True
+            quantidade_pacotes_para_entrega = cliente.get_qtd_pacotes_total()
+        # Verifica se o veiculo é capaz de entregar alguma parte do volume solictado pelo cliente
+        elif ((self.get_volume_maximo_suportado() // cliente.get_volumes_por_pacote()) > 0):
+            check_volume = True
+            quantidade_pacotes_para_entrega = self.get_volume_maximo_suportado() // cliente.get_volumes_por_pacote()
+        else: 
+            check_volume = False
+
+        '''
+        Calculos referentes ao valor da mercadoria
+        '''
+        if (quantidade_pacotes_para_entrega * cliente.get_preco_mercadoria_pacote() > 0):
+            check_valor = True
+
+        '''
+        Calculos referentes ao tempo de viagem
+        '''
+        # Calcular a distancia do local atual do veiculo até o cliente
+        distancia_veiculo_cliente = self.euclidian_distance(self.get_localizacao_atual().get_coordenadas(), cliente.get_coordenadas())
+
+        # Calcular a distancia do cliente até o centro
+        distancia_cliente_centro = self.euclidian_distance(cliente.get_coordenadas(), centro.get_coordenadas())
+
+        # Pega a velocidade da localizacao atual do veiculo até o proximo cliente
+        velocidade_localizacao_atual_cliente = 0
+        if (self.get_localizacao_atual() is centro):
+            velocidade_localizacao_atual_cliente = self.get_velocidade_inicial_final()
+        else :
+            velocidade_localizacao_atual_cliente = self.get_velocidade_normal()
+        
+        # Pega a velocidade do cliente até o centro
+        velocidade_cliente_centro = self.get_velocidade_inicial_final()
+
+        # Tempo de viagem em horas do ponto atual do veiculo até o cliente
+        tempo_viagem_localizacao_atual_cliente = distancia_veiculo_cliente / velocidade_localizacao_atual_cliente
+        # Transforma em segundos
+        tempo_viagem_localizacao_atual_cliente *= 120
+
+        # Tempo de viagem em horas do cliente até o centro
+        tempo_viagem_cliente_centro = distancia_cliente_centro / velocidade_cliente_centro
+        # Transforma em segundos
+        tempo_viagem_cliente_centro *= 120
+
+        tempo_carga_segundos = self._tempo_carga * 120
+        tempo_descarga_segundos = self._tempo_descarga * 120
+        tempo_total_viagem = tempo_viagem_localizacao_atual_cliente + tempo_viagem_cliente_centro + (tempo_carga_segundos * quantidade_pacotes_para_entrega) + (tempo_descarga_segundos * quantidade_pacotes_para_entrega)
+        
+        if ((self._tempo_jornada_disponivel - tempo_total_viagem) > 0):
+            check_tempo = True
+
+        # Debita valores da entrega no cliente e no veiculo.
+        if (check_tempo and check_valor and check_volume):
+
+            historico = [self.get_localizacao_atual(), self._valor_maximo_suportado,
+                           self._volume_maximo_suportado, self._tempo_jornada_disponivel]
+
+            self._valor_maximo_suportado -= (quantidade_pacotes_para_entrega * cliente.get_preco_mercadoria_pacote())
+            self._volume_maximo_suportado -= (quantidade_pacotes_para_entrega * cliente.get_volumes_por_pacote())
+            self._tempo_jornada_disponivel -= tempo_total_viagem
+
+            cliente.receber_volume((quantidade_pacotes_para_entrega * cliente.get_volumes_por_pacote()))
+            self.atualizar_localizacao_atual(cliente)
+
+            historico = [self.get_localizacao_atual(), self._valor_maximo_suportado,
+                self._volume_maximo_suportado, self._tempo_jornada_disponivel]
+
+            historico.append(self.get_localizacao_atual())
+            historico.append(self._valor_maximo_suportado)
+            historico.append(self._volume_maximo_suportado)
+            historico.append(self._tempo_jornada_disponivel)
+            
+            self.historico_trajetos.append(historico)
+
+            return True
+
+        return False
 
     '''
     Debita tempo da jornada, para que o veículo não trabalhe mais que 7 horas
@@ -57,15 +169,23 @@ class Veiculo:
         self.localizacao_atual = local
         self.trajeto_feito.append(local)
 
+    def is_disponivel_para_trajeto(self):
+        return self._disponivel_para_trajeto
+
     '''
     Métodos getters e setters
     '''
+    def reset_volume_maximo_suportado(self):
+       self._volume_maximo_suportado = self.get_volume_maximo_suportado_inicial()
+
+    def reset_valor_maximo_suportado(self):
+       self._valor_maximo_suportado = self.get_valor_maximo_suportado_inicial()    
 
     # Define para qual centro (região) o veículo será alocado
     def set_alocacao(self, centro):
 
         if (self.is_disponivel_para_alocacao()):
-            self._centro_de_alocacao = centro
+            self._centro_de_alocacao = centro.get_label()
             self._disponivel_para_alocacao = False
             self._disponivel_para_trajeto = True
 
@@ -119,6 +239,12 @@ class Veiculo:
     def get_custo_por_hora(self):
         return self._custo_medio_hora
 
+    def get_volume_maximo_suportado_inicial(self):
+        return self._volume_maximo_suportado_inicial
+
+    def get_valor_maximo_suportado_inicial(self):
+        return self._valor_maximo_suportado_inicial
+
     def converte_segundos_em_tempo(self):
         horas = self._tempo_jornada_disponivel // 3600
 
@@ -131,3 +257,12 @@ class Veiculo:
                 
         resultado = str(horas) + "h " + str(minutos) + "m " + str(segs_restantes_final)+ "s"
         return resultado
+    
+    def euclidian_distance(self, coordenadas_do_veiculo, coordenadas_do_vizinho):
+
+        x1 = float(coordenadas_do_veiculo[0])
+        y1 = float(coordenadas_do_veiculo[1])
+        x2 = float(coordenadas_do_vizinho[0])
+        y2 = float(coordenadas_do_vizinho[1])
+        
+        return math.sqrt((x2-x1)**2+(y2-y1)**2)
