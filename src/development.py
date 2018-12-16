@@ -23,7 +23,7 @@
 import random
 
 codigo = random.randint(1,6)
-arquivo = "C:/Users/Guilherme/Desktop/graph-theory-practical-challenge/src/instancias/__" + str(codigo) + ".txt"
+arquivo = "C:/Users/Breno/Desktop/graph-theory-practical-challenge/src/instancias/__" + str(codigo) + ".txt"
 
 with open(arquivo) as file:
 #with open('/home/breno/projetos/graph-theory-practical-challenge/assets/instancias/InstanciaTeste.txt') as file:
@@ -566,6 +566,8 @@ for centro in lista_de_centros:
                         # Veiculo que tem o tempo esgado, volta para o centro!
                         if (veiculo.is_tempo_esgotado(centro)):
 
+                            historico = [veiculo.get_localizacao_atual(), veiculo._valor_maximo_suportado,
+                                            veiculo._volume_maximo_suportado, veiculo._tempo_jornada_disponivel]
                             # Que Deus abençoe esse código
                             # Realizar debitos do caminho de volta do veiculo para o centro
                             distancia_cliente_centro = centro.get_distancia_centro_ao_cliente(veiculo.get_localizacao_atual().get_label())
@@ -574,6 +576,13 @@ for centro in lista_de_centros:
 
                             veiculo.atualizar_localizacao_atual(centro)
                             veiculo._disponivel_para_trajeto = False
+
+                            historico.append(veiculo.get_localizacao_atual())
+                            historico.append(veiculo._valor_maximo_suportado)
+                            historico.append(veiculo._volume_maximo_suportado)
+                            historico.append(veiculo._tempo_jornada_disponivel)
+                            
+                            veiculo.historico_trajetos.append(historico)
 
                         break
                     
@@ -585,12 +594,23 @@ for centro in lista_de_centros:
                         # Que Deus abençoe esse código
                         # Realizar debitos do caminho de volta do veiculo para o centro
                         if (veiculo.get_localizacao_atual() is not centro):
+
+                            historico = [veiculo.get_localizacao_atual(), veiculo._valor_maximo_suportado,
+                                            veiculo._volume_maximo_suportado, veiculo._tempo_jornada_disponivel]
+
                             distancia_cliente_centro = centro.get_distancia_centro_ao_cliente(veiculo.get_localizacao_atual().get_label())
                             tempo_retorno_centro = (distancia_cliente_centro[0] / veiculo._velocidade_inicial_final) * 120
                             veiculo.debita_tempo_jornada(veiculo.get_tempo_jornada_disponivel() - tempo_retorno_centro)
                             veiculo.atualizar_localizacao_atual(centro)
                             veiculo.reset_volume_maximo_suportado()
                             veiculo.reset_valor_maximo_suportado()
+
+                            historico.append(veiculo.get_localizacao_atual())
+                            historico.append(veiculo._valor_maximo_suportado)
+                            historico.append(veiculo._volume_maximo_suportado)
+                            historico.append(veiculo._tempo_jornada_disponivel)
+                            
+                            veiculo.historico_trajetos.append(historico)
 
                         else:
                             veiculo._disponivel_para_trajeto = False
