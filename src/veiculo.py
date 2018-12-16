@@ -39,6 +39,7 @@ class Veiculo:
         self.trajeto_feito = list()
         self.historico_trajetos = list()
     
+    # Sobrecarga da impressão do objeto
     def __str__(self):
         return "Veículo: " + self._tipo_de_veiculo + "\n\tCusto dia: " + str(self._custo_fixo_diario) + "\tCusto km: " + str(self._custo_medio_km) + "\tCusto hora: " + str(self._custo_medio_hora) + "\n\tVol. Máximo: " + str(self._volume_maximo_suportado) + "\tValor. Máximo: " + str(self._valor_maximo_suportado) + "\n\tVel. Ini/Fin: " + str(self._velocidade_inicial_final) + "\tVel. Normal: " + str(self._velocidade_normal)
 
@@ -172,28 +173,48 @@ class Veiculo:
     def is_disponivel_para_trajeto(self):
         return self._disponivel_para_trajeto
 
+    def is_disponivel_para_alocacao(self):
+        return self._disponivel_para_alocacao
+
     '''
-    Métodos getters e setters
+    Altera os valores de volume máximo e valor máximo do veículo quando ele volta para o centro de distribuição, pois ele está vazio
     '''
+    
     def reset_volume_maximo_suportado(self):
        self._volume_maximo_suportado = self.get_volume_maximo_suportado_inicial()
 
     def reset_valor_maximo_suportado(self):
-       self._valor_maximo_suportado = self.get_valor_maximo_suportado_inicial()    
+       self._valor_maximo_suportado = self.get_valor_maximo_suportado_inicial()
 
-    # Define para qual centro (região) o veículo será alocado
-    def set_alocacao(self, centro):
+    '''
+    Conversão de dados e calculo de distância padrão
+    '''
+    def converte_segundos_em_tempo(self):
+        horas = self._tempo_jornada_disponivel // 3600
 
-        if (self.is_disponivel_para_alocacao()):
-            self._centro_de_alocacao = centro.get_label()
-            self._disponivel_para_alocacao = False
-            self._disponivel_para_trajeto = True
+        segs_restantes = self._tempo_jornada_disponivel % 3600
+        minutos = segs_restantes // 60
+        segs_restantes_final = segs_restantes % 60
 
-            # TODO Passar o OBJETO do centro ao inves do label!!!!
-            self.atualizar_localizacao_atual(centro)
-        else:
-            print("Erro ao alocar! Veiculo ja alocado!")
+        if (horas >= 24): 
+            horas = int(horas % 24)
+
+        return (str(horas) + "h " + str(minutos) + "m " + str(segs_restantes_final)+ "s")
+    
+    #TODO - Globalizar essa função
+    def euclidian_distance(self, coordenadas_do_veiculo, coordenadas_do_vizinho):
+
+        x1 = float(coordenadas_do_veiculo[0])
+        y1 = float(coordenadas_do_veiculo[1])
+        x2 = float(coordenadas_do_vizinho[0])
+        y2 = float(coordenadas_do_vizinho[1])
         
+        return math.sqrt((x2-x1)**2+(y2-y1)**2)
+    
+    
+    '''
+    Métodos getters e setters
+    '''
     def get_localizacao_atual(self):
         return self.localizacao_atual
 
@@ -217,9 +238,6 @@ class Veiculo:
 
     def get_centro(self):
         return self._centro_de_alocacao
-
-    def is_disponivel_para_alocacao(self):
-        return self._disponivel_para_alocacao
     
     def get_tempo_jornada_disponivel(self):
         return self._tempo_jornada_disponivel
@@ -245,24 +263,13 @@ class Veiculo:
     def get_valor_maximo_suportado_inicial(self):
         return self._valor_maximo_suportado_inicial
 
-    def converte_segundos_em_tempo(self):
-        horas = self._tempo_jornada_disponivel // 3600
+    # Define para qual centro (região) o veículo será alocado
+    def set_alocacao(self, centro):
 
-        segs_restantes = self._tempo_jornada_disponivel % 3600
-        minutos = segs_restantes // 60
-        segs_restantes_final = segs_restantes % 60
-
-        if (horas >= 24): 
-            horas = int(horas % 24)
-                
-        resultado = str(horas) + "h " + str(minutos) + "m " + str(segs_restantes_final)+ "s"
-        return resultado
-    
-    def euclidian_distance(self, coordenadas_do_veiculo, coordenadas_do_vizinho):
-
-        x1 = float(coordenadas_do_veiculo[0])
-        y1 = float(coordenadas_do_veiculo[1])
-        x2 = float(coordenadas_do_vizinho[0])
-        y2 = float(coordenadas_do_vizinho[1])
-        
-        return math.sqrt((x2-x1)**2+(y2-y1)**2)
+        if (self.is_disponivel_para_alocacao()):
+            self._centro_de_alocacao = centro.get_label()
+            self._disponivel_para_alocacao = False
+            self._disponivel_para_trajeto = True
+            self.atualizar_localizacao_atual(centro)
+        else:
+            print("Erro ao alocar! Veiculo ja alocado!")

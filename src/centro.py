@@ -38,9 +38,28 @@ class Centro:
         
         return somatorio_valor_total_clientes
 
-    def set_veiculo(self, veiculo):
-        self._veiculos.append(veiculo)
+    
+    def euclidian_distance(self, coordenadas_do_vertice, coordenadas_do_vizinho):
+        x1 = float(coordenadas_do_vertice[0])
+        y1 = float(coordenadas_do_vertice[1])
+        x2 = float(coordenadas_do_vizinho[0])
+        y2 = float(coordenadas_do_vizinho[1])
+        return math.sqrt((x2-x1)**2+(y2-y1)**2)
 
+    
+    def imprime_veiculos_alocados(self):
+        tabela = PrettyTable()
+        tabela.title = "Centro " + str(self._label)
+        tabela.field_names = ['Tipo', 'Jornada Disponível', 'Volume em Carga', 'Custo Dia', 'Custo Km', 'Custo Hora']
+        
+        for veiculo in self._veiculos:
+            tabela.add_row([veiculo.get_tipo_de_veiculo(), veiculo.converte_segundos_em_tempo(), veiculo.get_volume_em_carregamento(), veiculo.get_custo_por_dia(), veiculo.get_custo_por_km(), veiculo.get_custo_por_hora()])
+        
+        tabela.sortby = "Custo Dia"
+
+        return tabela
+    
+    
     '''
     Getters e Setters
     '''
@@ -80,21 +99,5 @@ class Centro:
             #Cada "linha" em uma posição do atributo para facilitar a busca
             self._distancia_centro_ao_cliente.append(linha)
 
-    def euclidian_distance(self, coordenadas_do_vertice, coordenadas_do_vizinho):
-        x1 = float(coordenadas_do_vertice[0])
-        y1 = float(coordenadas_do_vertice[1])
-        x2 = float(coordenadas_do_vizinho[0])
-        y2 = float(coordenadas_do_vizinho[1])
-        return math.sqrt((x2-x1)**2+(y2-y1)**2)
-
-    def imprime_veiculos_alocados(self):
-        tabela = PrettyTable()
-        tabela.title = "Centro " + str(self._label)
-        tabela.field_names = ['Tipo', 'Jornada Disponível', 'Volume em Carga', 'Custo Dia', 'Custo Km', 'Custo Hora']
-        
-        for veiculo in self._veiculos:
-            tabela.add_row([veiculo.get_tipo_de_veiculo(), veiculo.converte_segundos_em_tempo(), veiculo.get_volume_em_carregamento(), veiculo.get_custo_por_dia(), veiculo.get_custo_por_km(), veiculo.get_custo_por_hora()])
-        
-        tabela.sortby = "Custo Dia"
-
-        return tabela
+    def set_veiculo(self, veiculo):
+        self._veiculos.append(veiculo)

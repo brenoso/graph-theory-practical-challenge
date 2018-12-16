@@ -20,7 +20,12 @@
 
 # In[1]:
 
-with open('C:/Users/Breno/Desktop/graph-theory-practical-challenge/src/__InstanciaMayron.txt') as file:
+import random
+
+codigo = random.randint(1,6)
+arquivo = "C:/Users/Guilherme/Desktop/graph-theory-practical-challenge/src/instancias/__" + str(codigo) + ".txt"
+
+with open(arquivo) as file:
 #with open('/home/breno/projetos/graph-theory-practical-challenge/assets/instancias/InstanciaTeste.txt') as file:
     N = int(file.readline())
     R = int(file.readline())
@@ -29,6 +34,8 @@ with open('C:/Users/Breno/Desktop/graph-theory-practical-challenge/src/__Instanc
     centros_distribuicao = [file.readline().split() for i in range(R)]
     clientes = ["".join([file.readline(), "-1"]).split() for i in range(N-R)]
     vehicles = [file.readline().split(' ') for i in range(K)]  
+
+print("O arquivo sorteado para apresentação foi: " + arquivo)
 
 # #### Exibição Inicial
 # 
@@ -140,7 +147,6 @@ polygon = Polygon([vor.vertices[i] for i in vor.regions[5] if not i == '-1'])
 
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.spatial import Voronoi
 from shapely.geometry import Polygon
 
 def voronoi_with_finite_polygons(vor):
@@ -403,8 +409,7 @@ for idx, veiculo in enumerate(vehicles):
 
 
 '''
-Calcula para cada tipo de veiculo, o total de veiculos
-por centro.
+Calcula para cada tipo de veiculo, o total de veiculos por centro.
 Também faz o calculo dos veiculos que 'sobrarão' caso a conta não
 dê valores exatos. Esses veículos 'sobressalentes' serão alocados de uma maneira mais eficiente
 de acordo com a demanda de cada centro
