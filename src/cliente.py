@@ -47,7 +47,10 @@ class Cliente:
         volume_recebido = round(volume_recebido, 8)
 
         if (volume_recebido <= volume_disponivel):
+            self._volume_total = round(self._volume_total, 8)
             self._volume_total = self._volume_total - volume_recebido
+
+            self._qtd_pacotes_total = round(self._qtd_pacotes_total, 8)
             self._qtd_pacotes_total = self._qtd_pacotes_total - (volume_recebido / self._volumes_por_pacote)
         else:
             print("O volume recebido ultrapassa o volume restante do cliente!")
