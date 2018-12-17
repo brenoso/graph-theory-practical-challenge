@@ -31,12 +31,17 @@ class Veiculo:
         self._disponivel_para_alocacao = True
 
         # Outras
-        self._volume_carregado = 0 # Volume especifico carregado no veiculo para cada trajeto
         self._disponivel_para_trajeto = False # Após ser alocado para um centro, ficará disponível para entregas
         self._tempo_jornada_disponivel = 25200 # -> 7horas em segundos
         self._tipo_de_veiculo = tipo_veiculo
         self.localizacao_atual = None
         self.trajeto_feito = list()
+
+        #controle de custos
+        self._jornada_realizada = 0
+        self._km_rodado = 0
+        self._volume_carregado = 0
+        self._custo_total_dia = 0
     
     # Sobrecarga da impressão do objeto
     def __str__(self):
@@ -111,28 +116,41 @@ class Veiculo:
         # Tempo de viagem em horas do ponto atual do veiculo até o cliente
         tempo_viagem_localizacao_atual_cliente = distancia_veiculo_cliente / velocidade_localizacao_atual_cliente
         # Transforma em segundos
-        tempo_viagem_localizacao_atual_cliente *= 120
+        tempo_viagem_localizacao_atual_cliente *= 60 #converte para min
+        tempo_viagem_localizacao_atual_cliente *= 60 #converte para seg
 
         # Tempo de viagem em horas do cliente até o centro
         tempo_viagem_cliente_centro = distancia_cliente_centro / velocidade_cliente_centro
         # Transforma em segundos
-        tempo_viagem_cliente_centro *= 120
+        tempo_viagem_cliente_centro *= 60 #converte para min
+        tempo_viagem_cliente_centro *= 60 #converte para seg
 
-        tempo_carga_segundos = self._tempo_carga * 120
-        tempo_descarga_segundos = self._tempo_descarga * 120
+        tempo_carga_segundos = self._tempo_carga
+        tempo_carga_segundos *= 60 #converte para min
+        tempo_carga_segundos *= 60 #converte para seg
+
+        tempo_descarga_segundos = self._tempo_descarga
+        tempo_descarga_segundos *= 60 #converte para min
+        tempo_descarga_segundos *= 60 #converte para seg
         tempo_total_viagem = tempo_viagem_localizacao_atual_cliente + tempo_viagem_cliente_centro + (tempo_carga_segundos * quantidade_pacotes_para_entrega) + (tempo_descarga_segundos * quantidade_pacotes_para_entrega)
         
-        if ((self._tempo_jornada_disponivel - tempo_total_viagem) > 0):
+        if ((self._tempo_jornada_disponivel - round(tempo_total_viagem, 0)) > 0):
             check_tempo = True
 
         # Debita valores da entrega no cliente e no veiculo.
         if (check_tempo and check_valor and check_volume):
-
+            #Debitos para validar viagem
             self._valor_maximo_suportado -= (quantidade_pacotes_para_entrega * cliente.get_preco_mercadoria_pacote())
             self._volume_maximo_suportado -= (quantidade_pacotes_para_entrega * cliente.get_volumes_por_pacote())
-            self._tempo_jornada_disponivel -= tempo_total_viagem
+            self._tempo_jornada_disponivel -= round(tempo_total_viagem, 0)
 
-            cliente.receber_volume((quantidade_pacotes_para_entrega * cliente.get_volumes_por_pacote()))
+            #Controle de custos
+            self._km_rodado += distancia_veiculo_cliente
+            self._jornada_realizada += round(tempo_total_viagem, 0)
+            volume = quantidade_pacotes_para_entrega * cliente.get_volumes_por_pacote()
+            self._volume_carregado += round(volume, 6)
+
+            cliente.receber_volume(quantidade_pacotes_para_entrega, cliente.get_volumes_por_pacote())
             self.atualizar_localizacao_atual(cliente)
 
             return True
@@ -175,17 +193,18 @@ class Veiculo:
     '''
     Conversão de dados e calculo de distância padrão
     '''
-    def converte_segundos_em_tempo(self):
-        horas = self._tempo_jornada_disponivel // 3600
+    def converte_segundos_em_tempo(self, tempo_para_conversao):
+        horas = tempo_para_conversao // 3600
 
-        segs_restantes = self._tempo_jornada_disponivel % 3600
+        segs_restantes = tempo_para_conversao % 3600
         minutos = segs_restantes // 60
         segs_restantes_final = segs_restantes % 60
 
         if (horas >= 24): 
             horas = int(horas % 24)
         
-        return (str(horas) + "h " + str(minutos) + "m " + str(segs_restantes_final)+ "s")
+        return (str(int(horas)) + "h " + str(int(minutos)) + "m " + str(int(segs_restantes_final))+ "s")
+    
     
     #TODO - Globalizar essa função
     def euclidian_distance(self, coordenadas_do_veiculo, coordenadas_do_vizinho):
@@ -227,11 +246,14 @@ class Veiculo:
     
     def get_tempo_jornada_disponivel(self):
         return self._tempo_jornada_disponivel
+
+    def get_tempo_jornada_realizada(self):
+        return self._jornada_realizada
     
     def get_tipo_de_veiculo(self):
         return self._tipo_de_veiculo
 
-    def get_volume_em_carregamento(self):
+    def get_volume_carregado(self):
         return self._volume_carregado
 
     def get_custo_por_dia(self):
@@ -252,6 +274,9 @@ class Veiculo:
     def get_trajeto_feito(self):
         return self.trajeto_feito
 
+    def get_km_rodado(self):
+        return self._km_rodado
+
     # Define para qual centro (região) o veículo será alocado
     def set_alocacao(self, centro):
 
@@ -262,3 +287,6 @@ class Veiculo:
             self.atualizar_localizacao_atual(centro)
         else:
             print("Erro ao alocar! Veiculo ja alocado!")
+
+    def set_custo_total_dia(self, valor):
+        self._custo_total_dia = valor

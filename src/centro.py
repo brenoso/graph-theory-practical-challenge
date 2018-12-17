@@ -50,13 +50,52 @@ class Centro:
     def imprime_veiculos_alocados(self):
         tabela = PrettyTable()
         tabela.title = "Centro " + str(self._label)
-        tabela.field_names = ['Tipo', 'Jornada Disponível', 'Volume em Carga', 'Custo Dia', 'Custo Km', 'Custo Hora']
+        tabela.field_names = ['Tipo', 'Jornada Disponível', 'Volume Máx', 'Custo Dia', 'Custo Km', 'Custo Hora']
         
         for veiculo in self._veiculos:
-            tabela.add_row([veiculo.get_tipo_de_veiculo(), veiculo.converte_segundos_em_tempo(), veiculo.get_volume_em_carregamento(), veiculo.get_custo_por_dia(), veiculo.get_custo_por_km(), veiculo.get_custo_por_hora()])
+            tabela.add_row([veiculo.get_tipo_de_veiculo(), veiculo.converte_segundos_em_tempo(veiculo.get_tempo_jornada_disponivel()), veiculo.get_volume_maximo_suportado(), veiculo.get_custo_por_dia(), veiculo.get_custo_por_km(), veiculo.get_custo_por_hora()])
         
         tabela.sortby = "Custo Dia"
 
+        return tabela
+
+    def imprime_fechamento_veiculos(self):
+        tabela = PrettyTable()
+        tabela.title = "Centro " + str(self._label)
+        tabela.field_names = ['Tipo', 'Jornada Feita', 'Volume Transportado', 'Km Dia', 'Custo Dia', 'Custo Km', 'Custo Hora', 'Total Dia']
+        custo_total = 0
+        for veiculo in self._veiculos:
+            if veiculo.get_volume_carregado() == 0:
+                volume_carregado = 0
+                km_rodado = 0
+                custo_dia = 0
+                custo_km = 0
+                custo_hora = 0
+                custo_total = 0
+            else:
+                volume_carregado = round(veiculo.get_volume_carregado(), 6)
+                km_rodado = veiculo.get_km_rodado()
+                custo_dia = veiculo.get_custo_por_dia()
+                custo_km = veiculo.get_custo_por_km() * veiculo.get_km_rodado()
+                custo_segundo = (veiculo.get_custo_por_hora() / 60) / 60
+                custo_hora = custo_segundo * veiculo.get_tempo_jornada_realizada()
+                custo_total = custo_dia + custo_km + custo_hora + custo_total
+            
+            #Atualiza o obejto veículo com o seu custo do dia.
+            veiculo.set_custo_total_dia = custo_total
+            
+            tabela.add_row([veiculo.get_tipo_de_veiculo(), 
+                            veiculo.converte_segundos_em_tempo(veiculo.get_tempo_jornada_realizada()), 
+                            volume_carregado,
+                            round(km_rodado, 2),
+                            round(custo_dia, 2), 
+                            round(custo_km, 2), 
+                            round(custo_hora, 2),
+                            round(custo_total, 2)])
+        
+        tabela.sortby = "Total Dia"
+        tabela.reversesort = True
+        
         return tabela
     
     

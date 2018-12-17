@@ -542,7 +542,7 @@ for centro in lista_de_centros:
 
             ### INICIO TSP ###
             vizinhos = local_atual.get_distancias_vizinhos()
-
+            eae = 2
             # Filtra os vizinhos para que não apareça a distancia do vertice para ele mesmo,
             # pois essa será sempre 0
             vizinhos = [x for x in vizinhos if x[1] > 0]
@@ -570,7 +570,10 @@ for centro in lista_de_centros:
                             # Que Deus abençoe esse código
                             # Realizar debitos do caminho de volta do veiculo para o centro
                             distancia_cliente_centro = centro.get_distancia_centro_ao_cliente(veiculo.get_localizacao_atual().get_label())
-                            tempo_retorno_centro = (distancia_cliente_centro[0] / veiculo._velocidade_inicial_final) * 120
+                            tempo_retorno_centro = (distancia_cliente_centro[0] / veiculo._velocidade_inicial_final)
+                            tempo_retorno_centro *= 60 #Converte em Minutos
+                            tempo_retorno_centro *= 60 #Converte em segundos
+                            tempo_retorno_centro = round(tempo_retorno_centro, 0)
                             veiculo.debita_tempo_jornada(veiculo.get_tempo_jornada_disponivel() - tempo_retorno_centro)
 
                             veiculo.atualizar_localizacao_atual(centro)
@@ -589,9 +592,12 @@ for centro in lista_de_centros:
 
                             distancia_cliente_centro = centro.get_distancia_centro_ao_cliente(veiculo.get_localizacao_atual().get_label())
                             
-                            tempo_retorno_centro = (distancia_cliente_centro[0] / veiculo._velocidade_inicial_final) * 120
+                            tempo_retorno_centro = (distancia_cliente_centro[0] / veiculo._velocidade_inicial_final)
+                            tempo_retorno_centro *= 60 #Converte em minutos
+                            tempo_retorno_centro *= 60 #Converte em segundos
+                            tempo_retorno_centro = round(tempo_retorno_centro, 0)
                             
-                            veiculo.debita_tempo_jornada(veiculo.get_tempo_jornada_disponivel() - round(tempo_retorno_centro, 0))
+                            veiculo.debita_tempo_jornada(veiculo.get_tempo_jornada_disponivel() - tempo_retorno_centro)
                             veiculo.atualizar_localizacao_atual(centro)
                             veiculo.reset_volume_maximo_suportado()
                             veiculo.reset_valor_maximo_suportado()
@@ -601,6 +607,23 @@ for centro in lista_de_centros:
 
             else:
                 veiculo._disponivel_para_trajeto = False
+               
+                #Verifica se não é um veículo que nem saiu do centro
+                if (veiculo.get_localizacao_atual() is not centro):
+                    #Debita Volta para o Centro
+                    distancia_cliente_centro = centro.get_distancia_centro_ao_cliente(veiculo.get_localizacao_atual().get_label())
+                                
+                    tempo_retorno_centro = (distancia_cliente_centro[0] / veiculo._velocidade_inicial_final)
+                    tempo_retorno_centro *= 60 #Converte em minutos
+                    tempo_retorno_centro *= 60 #Converte em segundos
+                    tempo_retorno_centro = round(tempo_retorno_centro, 0)
+                    
+                    veiculo.debita_tempo_jornada(veiculo.get_tempo_jornada_disponivel() - tempo_retorno_centro)
+                    veiculo.atualizar_localizacao_atual(centro)
+                    veiculo.reset_volume_maximo_suportado()
+                    veiculo.reset_valor_maximo_suportado()
+                    veiculo.atualizar_localizacao_atual(centro)
+                    
                 break         
 
 from prettytable import PrettyTable
