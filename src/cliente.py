@@ -39,19 +39,17 @@ class Cliente:
     multipla da quantidade de volume por pacote de cada cliente para garantir
     que sempre será debitado um numero inteiro de pacotes
     '''
-    def receber_volume(self, volume_recebido):
+    def receber_volume(self, qtd_pacotes, volume_recebido):
 
         volume_disponivel = round(self.get_volume_total(), 6)
-        volume_disponivel = round(volume_disponivel, 6)
-
+        volume_recebido = qtd_pacotes * volume_recebido
         volume_recebido = round(volume_recebido, 6)
 
         if (volume_recebido <= volume_disponivel):
             self._volume_total = round(self._volume_total,6)
             self._volume_total = self._volume_total - volume_recebido
 
-            self._qtd_pacotes_total = round(self._qtd_pacotes_total, 6)
-            self._qtd_pacotes_total = self._qtd_pacotes_total - (volume_recebido / self._volumes_por_pacote)
+            self._qtd_pacotes_total = self._qtd_pacotes_total - qtd_pacotes
         else:
             print("O volume recebido ultrapassa o volume restante do cliente!")
 
